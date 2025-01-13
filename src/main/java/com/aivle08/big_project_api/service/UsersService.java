@@ -28,7 +28,7 @@ public class UsersService {
                 registerInputDTO.getAddress(), null);
         Company savedCompany = companyRepository.save(company);
 
-        Department department = new Department(null, registerInputDTO.getDepartmentName(), savedCompany, null);
+        Department department = new Department(null, registerInputDTO.getDepartmentName(), savedCompany, null, null, null);
         Department savedDepartment = departmentRepository.save(department);
 
         Users user = new Users(null, registerInputDTO.getUserId(), registerInputDTO.getPassword(),
