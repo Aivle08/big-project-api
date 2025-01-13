@@ -25,4 +25,12 @@ public class Department {
     @OneToMany(mappedBy = "department")
     private List<Users> usersList;
 
+    @OneToMany
+    @JoinColumn(name = "department_id")
+    private List<Evaluation> evaluationList;
+
+    @OneToMany
+    @JoinColumn(name = "department_id")
+    private List<Applicant> applicantList;
+
 }
