@@ -1,36 +1,26 @@
 package com.aivle08.big_project_api.model;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Department {
+public class Recruitment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, unique = true)
-    private String name;
+    private LocalDateTime createdDate;
+    private LocalDateTime updatedDate;
+    private String title;
+    private String job;
 
-    @ManyToOne
-    private Company company;
-
-    @OneToMany(mappedBy = "department")
-    private List<Users> usersList;
-
-    @OneToMany
-    @JoinColumn(name = "department_id")
+    @OneToMany(mappedBy = "recruitment")
     private List<Evaluation> evaluationList;
-
-    @OneToMany
-    @JoinColumn(name = "department_id")
-    private List<Applicant> applicantList;
-
 }
