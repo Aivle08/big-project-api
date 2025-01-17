@@ -33,7 +33,7 @@ public class UsersService {
 
         Users user = new Users(null, registerInputDTO.getUserId(), registerInputDTO.getPassword(),
                 registerInputDTO.getUsername(), registerInputDTO.getEmail(),
-                registerInputDTO.getPosition(), savedDepartment);
+                registerInputDTO.getPosition(), registerInputDTO.getContact(), savedDepartment);
 
         return usersRepository.save(user);
     }

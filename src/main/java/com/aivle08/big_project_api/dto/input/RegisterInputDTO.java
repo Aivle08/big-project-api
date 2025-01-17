@@ -13,6 +13,7 @@ public class RegisterInputDTO {
     private String userId;
     private String password;
     private String username;
+    private String contact;
     private String email;
     private String position;
     private String companyName;

@@ -24,6 +24,8 @@ public class Users {
     private String email;
     @Column(nullable = false)
     private String position;
+    @Column(nullable = false)
+    private String contact;
 
     @ManyToOne
     private Department department;
