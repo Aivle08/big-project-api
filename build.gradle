@@ -33,6 +33,9 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	//swagger-api
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.0'
+	//spring-security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
 }
 
 tasks.named('test') {
