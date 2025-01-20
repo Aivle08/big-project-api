@@ -8,7 +8,6 @@ import com.aivle08.big_project_api.repository.CompanyRepository;
 import com.aivle08.big_project_api.repository.DepartmentRepository;
 import com.aivle08.big_project_api.repository.UsersRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,25 +16,23 @@ public class UsersService {
     private final UsersRepository usersRepository;
     private final DepartmentRepository departmentRepository;
     private final CompanyRepository companyRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsersService(UsersRepository usersRepository, DepartmentRepository departmentRepository, CompanyRepository companyRepository) {
+    public UsersService(UsersRepository usersRepository, DepartmentRepository departmentRepository, CompanyRepository companyRepository, PasswordEncoder passwordEncoder) {
         this.usersRepository = usersRepository;
         this.departmentRepository = departmentRepository;
         this.companyRepository = companyRepository;
-    }
-
-    public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
     public Users registerUser(RegisterInputDTO registerInputDTO) {
 
         if (usersRepository.existsByUsername(registerInputDTO.getUsername())) {
-            throw new IllegalArgumentException("Username is already in use");
+            throw new IllegalArgumentException("The username already exists.");
         }
 
-        String encodedPassword = getPasswordEncoder().encode(registerInputDTO.getPassword());
+        String encodedPassword = passwordEncoder.encode(registerInputDTO.getPassword());
 
         Company company = companyRepository.findByName(registerInputDTO.getCompanyName())
                 .orElseGet(() -> {
