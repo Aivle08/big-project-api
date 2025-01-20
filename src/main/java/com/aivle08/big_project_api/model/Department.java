@@ -1,6 +1,7 @@
 package com.aivle08.big_project_api.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,10 +25,8 @@ public class Department {
     private String name;
 
     @ManyToOne
+    @JsonIgnore
     private Company company;
-
-    @OneToMany(mappedBy = "department")
-    private List<Users> usersList;
 
     @OneToMany
     @JoinColumn(name = "department_id")

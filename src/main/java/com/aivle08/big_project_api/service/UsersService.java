@@ -9,7 +9,10 @@ import com.aivle08.big_project_api.repository.DepartmentRepository;
 import com.aivle08.big_project_api.repository.UsersRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UsersService {

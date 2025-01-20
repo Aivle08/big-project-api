@@ -28,5 +28,5 @@ public class Users {
     private String contact;
 
     @ManyToOne
-    private Department department;
+    private Company company;
 }
