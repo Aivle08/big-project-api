@@ -15,13 +15,13 @@ VALUES
     ('Finance', 3);
 
 -- Users 테이블 데이터 삽입
-INSERT INTO users (username, password, name, email, position, company_id)
+INSERT INTO users (username, password, name, email, position, company_id, contact)
 VALUES
-    ('johndoe', 'securepassword', 'John Doe', 'johndoe@example.com', 'Manager', 1),
-    ('janedoe', 'password123', 'Jane Doe', 'janedoe@example.com', 'HR Specialist', 2),
-    ('samsmith', 'password456', 'Sam Smith', 'samsmith@example.com', 'Developer', 1),
-    ('mikejohnson', 'mypassword', 'Mike Johnson', 'mikejohnson@example.com', 'Marketing Lead', 1),
-    ('emilydavids', 'admin123', 'Emily Davids', 'emilydavids@example.com', 'Finance Officer', 1);
+    ('johndoe', 'securepassword', 'John Doe', 'johndoe@example.com', 'Manager', 1, '11-1111-11111'),
+    ('janedoe', 'password123', 'Jane Doe', 'janedoe@example.com', 'HR Specialist', 2, '111-1111-11111'),
+    ('samsmith', 'password456', 'Sam Smith', 'samsmith@example.com', 'Developer', 1, '111-1111-11111'),
+    ('mikejohnson', 'mypassword', 'Mike Johnson', 'mikejohnson@example.com', 'Marketing Lead', 1, '111-1111-11111'),
+    ('emilydavids', 'admin123', 'Emily Davids', 'emilydavids@example.com', 'Finance Officer', 1, '111-1111-11111');
 
 -- Recruitment 테이블 데이터 삽입
 INSERT INTO recruitment (created_date, updated_date, title, job)
