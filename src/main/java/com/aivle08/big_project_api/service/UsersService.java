@@ -8,7 +8,10 @@ import com.aivle08.big_project_api.repository.CompanyRepository;
 import com.aivle08.big_project_api.repository.DepartmentRepository;
 import com.aivle08.big_project_api.repository.UsersRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UsersService {
@@ -28,13 +31,17 @@ public class UsersService {
                 registerInputDTO.getAddress(), null);
         Company savedCompany = companyRepository.save(company);
 
-        Department department = new Department(null, registerInputDTO.getDepartmentName(), savedCompany, null, null, null);
+        Department department = new Department(null, registerInputDTO.getDepartmentName(), savedCompany, null, null);
         Department savedDepartment = departmentRepository.save(department);
 
         Users user = new Users(null, registerInputDTO.getUserId(), registerInputDTO.getPassword(),
                 registerInputDTO.getUsername(), registerInputDTO.getEmail(),
-                registerInputDTO.getPosition(), savedDepartment);
+                registerInputDTO.getPosition(), savedCompany);
 
         return usersRepository.save(user);
+    }
+
+    public ResponseEntity<List<Users>> getAll() {
+        return ResponseEntity.ok(usersRepository.findAll());
     }
 }
