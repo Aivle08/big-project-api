@@ -8,6 +8,8 @@ import com.aivle08.big_project_api.repository.CompanyRepository;
 import com.aivle08.big_project_api.repository.DepartmentRepository;
 import com.aivle08.big_project_api.repository.UsersRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,18 +24,41 @@ public class UsersService {
         this.companyRepository = companyRepository;
     }
 
+    public PasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     @Transactional
     public Users registerUser(RegisterInputDTO registerInputDTO) {
-        Company company = new Company(null, registerInputDTO.getCompanyName(),
-                registerInputDTO.getAddress(), null);
-        Company savedCompany = companyRepository.save(company);
 
-        Department department = new Department(null, registerInputDTO.getDepartmentName(), savedCompany, null, null, null);
-        Department savedDepartment = departmentRepository.save(department);
+        if (usersRepository.existsByUsername(registerInputDTO.getUsername())) {
+            throw new BadRequestException("Username is already in use");
+        }
 
-        Users user = new Users(null, registerInputDTO.getUserId(), registerInputDTO.getPassword(),
-                registerInputDTO.getUsername(), registerInputDTO.getEmail(),
-                registerInputDTO.getPosition(), registerInputDTO.getContact(), savedDepartment);
+        String encodedPassword = getPasswordEncoder().encode(registerInputDTO.getPassword());
+
+        Company company = companyRepository.findByName(registerInputDTO.getCompanyName())
+                .orElseGet(() -> {
+                    Company newCompany = new Company(null, registerInputDTO.getCompanyName(), registerInputDTO.getAddress(), null);
+                    return companyRepository.save(newCompany);
+                });
+
+        Department department = departmentRepository.findByNameAndCompany(registerInputDTO.getDepartmentName(), company)
+                .orElseGet(() -> {
+                    Department newDepartment = new Department(null, registerInputDTO.getDepartmentName(), company, null, null, null);
+                    return departmentRepository.save(newDepartment);
+                });
+
+        Users user = new Users(
+                null,
+                registerInputDTO.getUserId(),
+                encodedPassword,
+                registerInputDTO.getUsername(),
+                registerInputDTO.getEmail(),
+                registerInputDTO.getPosition(),
+                registerInputDTO.getContact(),
+                department
+        );
 
         return usersRepository.save(user);
     }
