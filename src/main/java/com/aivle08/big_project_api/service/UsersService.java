@@ -32,7 +32,7 @@ public class UsersService {
     public Users registerUser(RegisterInputDTO registerInputDTO) {
 
         if (usersRepository.existsByUsername(registerInputDTO.getUsername())) {
-            throw new BadRequestException("Username is already in use");
+            throw new IllegalArgumentException("Username is already in use");
         }
 
         String encodedPassword = getPasswordEncoder().encode(registerInputDTO.getPassword());
