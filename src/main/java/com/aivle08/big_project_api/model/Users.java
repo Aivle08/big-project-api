@@ -26,5 +26,5 @@ public class Users {
     private String position;
 
     @ManyToOne
-    private Department department;
+    private Company company;
 }
