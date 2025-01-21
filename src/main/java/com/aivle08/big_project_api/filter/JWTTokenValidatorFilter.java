@@ -35,12 +35,11 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
                         .build()
                         .parseClaimsJws(jwt)
                         .getBody();
-                String username = String.valueOf(claims.get("username"));
+                String username = String.valueOf(claims.getSubject());
                 String authorities = (String) claims.get("authorities");
                 Authentication auth = new UsernamePasswordAuthenticationToken(username, null,
                         AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
                 SecurityContextHolder.getContext().setAuthentication(auth);
-                System.out.println(auth);
             } catch (Exception e) {
                 throw new BadCredentialsException("Invalid Token received!");
             }

@@ -10,11 +10,11 @@ import com.aivle08.big_project_api.repository.DepartmentRepository;
 import com.aivle08.big_project_api.repository.UsersRepository;
 import com.aivle08.big_project_api.util.JwtTokenUtil;
 import jakarta.transaction.Transactional;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -53,11 +53,15 @@ public class UsersService {
                     return companyRepository.save(newCompany);
                 });
 
-        Department department = departmentRepository.findByNameAndCompany(registerInputDTO.getDepartmentName(), company)
-                .orElseGet(() -> {
-                    Department newDepartment = new Department(null, registerInputDTO.getDepartmentName(), null, null, null);
-                    return departmentRepository.save(newDepartment);
-                });
+//        Department department = departmentRepository.findByNameAndCompany(registerInputDTO.getDepartmentName(), company)
+//                .orElseGet(() -> {
+//                    Department newDepartment = new Department(null, registerInputDTO.getDepartmentName(), company, null, null);
+//                    return departmentRepository.save(newDepartment);
+//                });
+
+        Department department = new Department(null, registerInputDTO.getDepartmentName(), company, null, null);
+        departmentRepository.save(department);
+
 
         Users user = new Users(
                 null,
@@ -67,7 +71,8 @@ public class UsersService {
                 registerInputDTO.getEmail(),
                 registerInputDTO.getPosition(),
                 registerInputDTO.getContact(),
-                company
+                company,
+                department
         );
 
         return usersRepository.save(user);
@@ -87,5 +92,10 @@ public class UsersService {
         } catch (AuthenticationException ex) {
             throw new IllegalArgumentException("Invalid username or password.");
         }
+    }
+
+    public Users getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return usersRepository.findByUsername(authentication.getName());
     }
 }

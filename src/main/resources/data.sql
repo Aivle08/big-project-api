@@ -6,22 +6,23 @@ VALUES
     ('Global Enterprises', '2345 Global Road');
 
 -- Department 테이블 데이터 삽입
-INSERT INTO department (name, company_id)
+INSERT INTO department (company_id, name)
 VALUES
-    ('Software Development', 1),
-    ('Human Resources', 1),
-    ('Research & Development', 2),
-    ('Marketing', 3),
-    ('Finance', 3);
+    (1, 'Software Development'),
+    (2, 'Human Resources'),
+    (2, 'Research & Development'),
+    (1, 'Marketing'),
+    (1, 'Finance');
 
 -- Users 테이블 데이터 삽입
-INSERT INTO users (username, password, name, email, position, company_id, contact)
+INSERT INTO users
+(username, password, name, email, position, company_id, contact, department_id)
 VALUES
-    ('johndoe', 'securepassword', 'John Doe', 'johndoe@example.com', 'Manager', 1, '11-1111-11111'),
-    ('janedoe', 'password123', 'Jane Doe', 'janedoe@example.com', 'HR Specialist', 2, '111-1111-11111'),
-    ('samsmith', 'password456', 'Sam Smith', 'samsmith@example.com', 'Developer', 1, '111-1111-11111'),
-    ('mikejohnson', 'mypassword', 'Mike Johnson', 'mikejohnson@example.com', 'Marketing Lead', 1, '111-1111-11111'),
-    ('emilydavids', 'admin123', 'Emily Davids', 'emilydavids@example.com', 'Finance Officer', 1, '111-1111-11111');
+    ('john123', 'securepassword', 'John Doe', 'johndoe@example.com', 'Manager', 1, '11-1111-11111', 1),
+    ('jane123', 'password123', 'Jane Doe', 'janedoe@example.com', 'HR Specialist', 2, '111-1111-11111', 2),
+    ('sam123', 'password456', 'Sam Smith', 'samsmith@example.com', 'Developer', 1, '111-1111-11111', 1),
+    ('mike123', 'mypassword', 'Mike Johnson', 'mikejohnson@example.com', 'Marketing Lead', 1, '111-1111-11111', 4),
+    ('emily123', 'admin123', 'Emily Davids', 'emilydavids@example.com', 'Finance Officer', 1, '111-1111-11111', 5);
 
 -- Recruitment 테이블 데이터 삽입
 INSERT INTO recruitment (created_date, updated_date, title, job)
@@ -32,12 +33,12 @@ VALUES
     (TIMESTAMP '2025-01-12 13:30:00', TIMESTAMP '2025-01-12 13:30:00', 'Marketing Strategist', 'Create and execute marketing plans');
 
 -- Evaluation 테이블 데이터 삽입
-INSERT INTO evaluation (item, detail, department_id, recruitment_id)
+INSERT INTO evaluation (item, detail, recruitment_id)
 VALUES
-    ('Code Quality', 'Evaluate the quality of the code written by the candidate', 1, 1),
-    ('Communication Skills', 'Evaluate the ability to communicate effectively with team members', 1, 1),
-    ('Problem-Solving', 'Assess the candidate''s ability to solve complex problems', 1, 1),
-    ('Cultural Fit', 'Evaluate how well the candidate fits into the company culture', 1, 1);
+    ('Code Quality', 'Evaluate the quality of the code written by the candidate', 1),
+    ('Communication Skills', 'Evaluate the ability to communicate effectively with team members', 1),
+    ('Problem-Solving', 'Assess the candidate''s ability to solve complex problems', 1),
+    ('Cultural Fit', 'Evaluate how well the candidate fits into the company culture', 1);
 
 -- Applicant 테이블 데이터 삽입
 INSERT INTO applicant (name, email, contact, file_name, resume_result, resume_summary, department_id)

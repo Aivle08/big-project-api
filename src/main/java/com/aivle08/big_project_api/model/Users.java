@@ -29,4 +29,7 @@ public class Users {
 
     @ManyToOne
     private Company company;
+
+    @ManyToOne
+    private Department department;
 }

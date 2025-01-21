@@ -1,6 +1,5 @@
 package com.aivle08.big_project_api.model;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,7 +29,7 @@ public class Department {
 
     @OneToMany
     @JoinColumn(name = "department_id")
-    private List<Evaluation> evaluationList;
+    private List<Recruitment> recruitmentList;
 
     @OneToMany
     @JoinColumn(name = "department_id")
