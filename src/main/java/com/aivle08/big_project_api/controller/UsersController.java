@@ -13,11 +13,9 @@ import org.springframework.web.bind.annotation.*;
 public class UsersController {
 
     private final UsersService usersService;
-    private final JwtTokenUtil jwtTokenUtil;
 
-    public UsersController(UsersService usersService, JwtTokenUtil jwtTokenUtil) {
+    public UsersController(UsersService usersService) {
         this.usersService = usersService;
-        this.jwtTokenUtil = jwtTokenUtil;
     }
 
     @PostMapping("/register")
@@ -28,9 +26,7 @@ public class UsersController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginInputDTO loginInputDTO) {
-        String jwt = jwtTokenUtil.generateToken(loginInputDTO.getId());
-        System.out.println("jwt = " + jwt);
-
+        String jwt = usersService.loginUser(loginInputDTO);
         return ResponseEntity.ok("Login successful!");
     }
 
