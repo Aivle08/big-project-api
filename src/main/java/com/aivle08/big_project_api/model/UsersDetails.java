@@ -19,11 +19,17 @@ public class UsersDetails implements UserDetails {
 
     @Override
     public String getPassword() {
+        if(user == null) {
+            return null;
+        }
         return user.getPassword();
     }
 
     @Override
     public String getUsername() {
+        if(user == null) {
+            return null;
+        }
         return user.getUsername();
     }
 
