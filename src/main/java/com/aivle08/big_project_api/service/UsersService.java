@@ -45,7 +45,7 @@ public class UsersService {
 
         Department department = departmentRepository.findByNameAndCompany(registerInputDTO.getDepartmentName(), company)
                 .orElseGet(() -> {
-                    Department newDepartment = new Department(null, registerInputDTO.getDepartmentName(), company, null, null, null);
+                    Department newDepartment = new Department(null, registerInputDTO.getDepartmentName(), null, null, null);
                     return departmentRepository.save(newDepartment);
                 });
 
@@ -57,7 +57,7 @@ public class UsersService {
                 registerInputDTO.getEmail(),
                 registerInputDTO.getPosition(),
                 registerInputDTO.getContact(),
-                department
+                company
         );
 
         return usersRepository.save(user);
