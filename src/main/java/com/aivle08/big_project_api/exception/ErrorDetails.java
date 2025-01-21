@@ -3,7 +3,6 @@ package com.aivle08.big_project_api.exception;
 import java.time.LocalDateTime;
 
 public class ErrorDetails {
-
     private LocalDateTime timestamp;
     private String message;
     private String details;

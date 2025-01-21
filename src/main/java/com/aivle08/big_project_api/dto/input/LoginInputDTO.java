@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginInputDTO {
-    private String userId;
+    private String id;
     private String password;
 }

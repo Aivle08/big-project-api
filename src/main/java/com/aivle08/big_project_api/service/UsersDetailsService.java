@@ -1,7 +1,6 @@
 package com.aivle08.big_project_api.service;
 
 import com.aivle08.big_project_api.model.UsersDetails;
-import com.aivle08.big_project_api.model.Users;
 import com.aivle08.big_project_api.repository.UsersRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

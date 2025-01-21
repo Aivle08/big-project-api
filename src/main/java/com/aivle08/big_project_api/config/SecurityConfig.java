@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,8 +26,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults()) // CORS 허용
-                .csrf(csrf -> csrf.disable()) // CSRF 완전히 비활성화
+                .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
 
                 .addFilterBefore(new JWTTokenValidatorFilter(),BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
@@ -36,16 +37,12 @@ public class SecurityConfig {
                                 "/api/v3/**",
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",
-                                "/api/v1/users/register/**",
-                                "/api/v1/users/login/**",
-                                "/notices"
+                                "/api/v1/users/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
-
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                .headers(headers -> headers.frameOptions().disable());
+                .headers(headersConfigurer -> headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
         return http.build();
     }
