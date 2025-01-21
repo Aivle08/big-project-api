@@ -10,6 +10,7 @@ import com.aivle08.big_project_api.repository.DepartmentRepository;
 import com.aivle08.big_project_api.repository.UsersRepository;
 import com.aivle08.big_project_api.util.JwtTokenUtil;
 import jakarta.transaction.Transactional;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -82,6 +83,7 @@ public class UsersService {
             String token = jwtTokenUtil.generateToken(loginInputDTO.getId());
 
             return token;
+
         } catch (AuthenticationException ex) {
             throw new IllegalArgumentException("Invalid username or password.");
         }

@@ -27,7 +27,10 @@ public class UsersController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginInputDTO loginInputDTO) {
         String jwt = usersService.loginUser(loginInputDTO);
-        return ResponseEntity.ok("Login successful!");
+        System.out.println(jwt);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + jwt)
+                .body("Login successful!");
     }
 
 }
