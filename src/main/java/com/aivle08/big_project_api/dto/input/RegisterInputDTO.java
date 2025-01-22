@@ -17,6 +17,5 @@ public class RegisterInputDTO {
     private String email;
     private String position;
     private String companyName;
-    private String address;
     private String departmentName;
 }
