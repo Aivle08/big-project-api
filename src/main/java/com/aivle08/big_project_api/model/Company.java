@@ -18,7 +18,6 @@ public class Company {
 
     @Column(nullable = false, unique = true)
     private String name;
-    private String address;
 
     @OneToMany(mappedBy = "company")
     private List<Department> departmentList;

@@ -15,11 +15,9 @@ import org.springframework.web.bind.annotation.*;
 public class UsersController {
 
     private final UsersService usersService;
-    private final AuthenticationManager authenticationManager;
 
-    public UsersController(UsersService usersService, AuthenticationManager authenticationManager) {
+    public UsersController(UsersService usersService) {
         this.usersService = usersService;
-        this.authenticationManager = authenticationManager;
     }
 
     @PostMapping("/register")

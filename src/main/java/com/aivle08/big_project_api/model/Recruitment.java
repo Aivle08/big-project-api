@@ -1,5 +1,6 @@
 package com.aivle08.big_project_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,4 +24,8 @@ public class Recruitment {
 
     @OneToMany(mappedBy = "recruitment")
     private List<Evaluation> evaluationList;
+
+    @ManyToOne
+    @JsonIgnore
+    private Department department;
 }

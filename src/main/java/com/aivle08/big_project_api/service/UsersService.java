@@ -49,7 +49,7 @@ public class UsersService {
 
         Company company = companyRepository.findByName(registerInputDTO.getCompanyName())
                 .orElseGet(() -> {
-                    Company newCompany = new Company(null, registerInputDTO.getCompanyName(), registerInputDTO.getAddress(), null);
+                    Company newCompany = new Company(null, registerInputDTO.getCompanyName(), null);
                     return companyRepository.save(newCompany);
                 });
 

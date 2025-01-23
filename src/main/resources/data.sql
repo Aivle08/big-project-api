@@ -1,9 +1,9 @@
 -- Company 테이블 데이터 삽입
-INSERT INTO company (name, address)
+INSERT INTO company (name)
 VALUES
-    ('Tech Solutions', '5678 Tech Avenue'),
-    ('Innovative Corp', '9101 Innovation Street'),
-    ('Global Enterprises', '2345 Global Road');
+    ('Tech Solutions'),
+    ('Innovative Corp'),
+    ('Global Enterprises');
 
 -- Department 테이블 데이터 삽입
 INSERT INTO department (company_id, name)
