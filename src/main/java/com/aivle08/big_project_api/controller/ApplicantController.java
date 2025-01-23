@@ -1,16 +1,16 @@
 package com.aivle08.big_project_api.controller;
 
+import com.aivle08.big_project_api.dto.input.ApplicantInputDTO;
 import com.aivle08.big_project_api.model.Applicant;
 import com.aivle08.big_project_api.service.ApplicantService;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/applicant")
+@RequestMapping("/api/v1")
 @CrossOrigin
 public class ApplicantController {
     private final ApplicantService applicantService;
@@ -22,5 +22,13 @@ public class ApplicantController {
     @GetMapping
     public List<Applicant> getApplicants() {
         return applicantService.getApplicants();
+    }
+
+    @GetMapping("/recruitment/{recruitment_id}/applicant")
+    public ResponseEntity<?> getApplicantsByRecruitmentId(@PathVariable Long recruitmentId) {
+
+        List<ApplicantInputDTO> applicantsInputDTO = applicantService.getApplicantsByRecruitmentId(recruitmentId);
+
+        return ResponseEntity.ok().body(applicantsInputDTO);
     }
 }

@@ -38,7 +38,7 @@ public class RecruitmentService {
 
         Department department = usersService.getCurrentUser().getDepartment();
 
-        Recruitment recruitment = new Recruitment(null, LocalDateTime.now(), LocalDateTime.now(), recruitmentInputDTO.getTitle(), recruitmentInputDTO.getJob(), evaluations, department);
+        Recruitment recruitment = new Recruitment(null, LocalDateTime.now(), LocalDateTime.now(), recruitmentInputDTO.getTitle(), recruitmentInputDTO.getJob(), evaluations, null, department);
         Recruitment savedRecruitment = recruitmentRepository.save(recruitment);
 
         List<Evaluation> evaluationList = evaluations
