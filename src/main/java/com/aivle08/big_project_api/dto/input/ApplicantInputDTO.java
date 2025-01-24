@@ -20,11 +20,9 @@ public class ApplicantInputDTO {
     private Boolean resumeResult;
     private String resumeSummary;
 
-    private Long recruitmentId;
-
     public static ApplicantInputDTO fromEntity(Applicant applicant) {
         return new ApplicantInputDTO(applicant.getName(), applicant.getEmail(),
                 applicant.getContact(), applicant.getFileName(), false,
-                applicant.getResumeSummary(), applicant.getRecruitment().getId());
+                applicant.getResumeSummary());
     }
 }
