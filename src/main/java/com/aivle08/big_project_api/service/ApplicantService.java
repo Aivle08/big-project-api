@@ -31,6 +31,16 @@ public class ApplicantService {
         return applicantInputDTOList;
     }
 
+    public List<Long> getApplicantIDsByRecruitmentId(Long recruitmentId) {
+        List<Applicant> applicants = applicantRepository.findByRecruitmentId(recruitmentId);
+
+        List<Long> applicantIds = applicants.stream()
+                .map(Applicant::getId) // Applicant의 id를 추출
+                .toList();
+
+        return applicantIds;
+    }
+
     @Transactional
     public ApplicantInputDTO applicantCreate(ApplicantInputDTO applicantInputDTO, Long recruitmentId) {
         Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElse(null);

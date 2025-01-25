@@ -55,7 +55,14 @@ VALUES
     ('This is a detailed summary for Jane Smith''s evaluation'),
     ('This is a detailed summary for Alice Brown''s evaluation'),
     ('This is a detailed summary for Bob White''s evaluation');
-
+-- 추가된 EvaluationDetail 데이터
+INSERT INTO evaluation_detail (summary)
+VALUES
+    ('Detailed summary for evaluation 5 for Jane Smith'),
+    ('Detailed summary for evaluation 6 for Jane Smith'),
+    ('Detailed summary for evaluation 7 for Jane Smith'),
+    ('Detailed summary for evaluation 8 for Jane Smith'),
+    ('Detailed summary for evaluation 9 for Jane Smith');
 
 -- EvaluationScore 테이블 데이터 삽입
 INSERT INTO evaluation_score (applicant_id, score, evaluation_id, evaluation_detail_id)
@@ -64,3 +71,11 @@ VALUES
     (2, 70, 1, 2),
     (3, 95, 1, 3),
     (4, 80, 1, 4);
+-- 추가된 EvaluationScore 데이터
+INSERT INTO evaluation_score (applicant_id, score, evaluation_id, evaluation_detail_id)
+VALUES
+    (2, 75, 1, 5), -- EvaluationDetail ID = 5
+    (2, 80, 1, 6), -- EvaluationDetail ID = 6
+    (2, 65, 1, 7), -- EvaluationDetail ID = 7
+    (2, 90, 1, 8), -- EvaluationDetail ID = 8
+    (2, 85, 1, 9); -- EvaluationDetail ID = 9
