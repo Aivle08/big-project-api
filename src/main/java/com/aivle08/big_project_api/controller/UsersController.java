@@ -1,7 +1,7 @@
 package com.aivle08.big_project_api.controller;
 
-import com.aivle08.big_project_api.dto.input.LoginInputDTO;
-import com.aivle08.big_project_api.dto.input.RegisterInputDTO;
+import com.aivle08.big_project_api.dto.request.LoginRequestDTO;
+import com.aivle08.big_project_api.dto.request.RegisterRequestDTO;
 import com.aivle08.big_project_api.model.Users;
 import com.aivle08.big_project_api.service.UsersService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,8 +29,8 @@ public class UsersController {
             @ApiResponse(responseCode = "201", description = "회원가입 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<String> register(@RequestBody RegisterInputDTO registerInputDTO) {
-        usersService.registerUser(registerInputDTO);
+    public ResponseEntity<String> register(@RequestBody RegisterRequestDTO registerRequestDTO) {
+        usersService.registerUser(registerRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }
 
@@ -40,8 +40,8 @@ public class UsersController {
             @ApiResponse(responseCode = "200", description = "로그인 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<String> login(@RequestBody LoginInputDTO loginInputDTO) {
-        String jwt = usersService.loginUser(loginInputDTO);
+    public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+        String jwt = usersService.loginUser(loginRequestDTO);
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + jwt)
                 .body("Login successful!");

@@ -1,6 +1,6 @@
 package com.aivle08.big_project_api.service;
 
-import com.aivle08.big_project_api.dto.input.ApplicantInputDTO;
+import com.aivle08.big_project_api.dto.request.ApplicantRequestDTO;
 import com.aivle08.big_project_api.model.Applicant;
 import com.aivle08.big_project_api.model.Recruitment;
 import com.aivle08.big_project_api.repository.ApplicantRepository;
@@ -24,31 +24,31 @@ public class ApplicantService {
         return applicantRepository.findAll();
     }
 
-    public List<ApplicantInputDTO> getApplicantsByRecruitmentId(Long recruitmentId) {
+    public List<ApplicantRequestDTO> getApplicantsByRecruitmentId(Long recruitmentId) {
         List<Applicant> applicant = applicantRepository.findByRecruitmentId(recruitmentId);
 
-        List<ApplicantInputDTO> applicantInputDTOList = applicant.stream().map(ApplicantInputDTO::fromEntity).toList();
-        return applicantInputDTOList;
+        List<ApplicantRequestDTO> applicantRequestDTOList = applicant.stream().map(ApplicantRequestDTO::fromEntity).toList();
+        return applicantRequestDTOList;
     }
 
     @Transactional
-    public ApplicantInputDTO applicantCreate(ApplicantInputDTO applicantInputDTO, Long recruitmentId) {
+    public ApplicantRequestDTO applicantCreate(ApplicantRequestDTO applicantRequestDTO, Long recruitmentId) {
         Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElse(null);
 
         Applicant applicant = new Applicant(
                 null,
-                applicantInputDTO.getName(),
-                applicantInputDTO.getEmail(),
-                applicantInputDTO.getContact(),
-                applicantInputDTO.getFileName(),
+                applicantRequestDTO.getName(),
+                applicantRequestDTO.getEmail(),
+                applicantRequestDTO.getContact(),
+                applicantRequestDTO.getFileName(),
                 false,
-                applicantInputDTO.getResumeSummary(),
+                applicantRequestDTO.getResumeSummary(),
                 null,
                 recruitment
         );
 
         Applicant savedApplicant = applicantRepository.save(applicant);
 
-        return ApplicantInputDTO.fromEntity(savedApplicant);
+        return ApplicantRequestDTO.fromEntity(savedApplicant);
     }
 }

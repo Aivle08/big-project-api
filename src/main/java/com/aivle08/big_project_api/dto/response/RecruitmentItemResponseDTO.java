@@ -1,4 +1,4 @@
-package com.aivle08.big_project_api.dto;
+package com.aivle08.big_project_api.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RecruitmentDTO {
+public class RecruitmentItemResponseDTO {
     private String title;
     private String job;
 }

@@ -1,4 +1,4 @@
-package com.aivle08.big_project_api.dto.input;
+package com.aivle08.big_project_api.dto.request;
 
 
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginInputDTO {
+public class LoginRequestDTO {
     private String id;
     private String password;
 }

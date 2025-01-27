@@ -1,6 +1,6 @@
 package com.aivle08.big_project_api.controller;
 
-import com.aivle08.big_project_api.dto.input.ApplicantInputDTO;
+import com.aivle08.big_project_api.dto.request.ApplicantRequestDTO;
 import com.aivle08.big_project_api.service.ApplicantService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,8 +29,8 @@ public class ApplicantController {
             @ApiResponse(responseCode = "200", description = "지원자 리스트 조회 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<List<ApplicantInputDTO>> getApplicantsByRecruitmentId(@PathVariable Long id) {
-        List<ApplicantInputDTO> applicantsInputDTO = applicantService.getApplicantsByRecruitmentId(id);
+    public ResponseEntity<List<ApplicantRequestDTO>> getApplicantsByRecruitmentId(@PathVariable Long id) {
+        List<ApplicantRequestDTO> applicantsInputDTO = applicantService.getApplicantsByRecruitmentId(id);
 
         return ResponseEntity.ok().body(applicantsInputDTO);
     }
@@ -41,9 +41,9 @@ public class ApplicantController {
             @ApiResponse(responseCode = "200", description = "지원자 리스트 저장 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<ApplicantInputDTO> postRecruitment(@RequestBody ApplicantInputDTO applicantInputDTO, @PathVariable Long id) {
-        applicantService.applicantCreate(applicantInputDTO, id);
+    public ResponseEntity<ApplicantRequestDTO> postRecruitment(@RequestBody ApplicantRequestDTO applicantRequestDTO, @PathVariable Long id) {
+        applicantService.applicantCreate(applicantRequestDTO, id);
         return ResponseEntity.ok()
-                .body(applicantInputDTO);
+                .body(applicantRequestDTO);
     }
 }
