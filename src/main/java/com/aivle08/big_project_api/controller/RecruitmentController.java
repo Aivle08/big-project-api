@@ -20,7 +20,7 @@ public class RecruitmentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RecruitmentOutputDTO>>  getRecruitments() {
+    public ResponseEntity<List<RecruitmentOutputDTO>> getRecruitments() {
         return ResponseEntity.ok()
                 .body(recruitmentService.findAllRecruitment());
     }

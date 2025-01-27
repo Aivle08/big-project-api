@@ -1,10 +1,7 @@
 package com.aivle08.big_project_api.controller;
 
 import com.aivle08.big_project_api.dto.input.ApplicantInputDTO;
-import com.aivle08.big_project_api.dto.input.RecruitmentInputDTO;
-import com.aivle08.big_project_api.model.Applicant;
 import com.aivle08.big_project_api.service.ApplicantService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/recruitment/{id}")
-@CrossOrigin
 public class ApplicantController {
     private final ApplicantService applicantService;
 

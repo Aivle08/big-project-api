@@ -1,6 +1,5 @@
 package com.aivle08.big_project_api.config;
 
-//import com.aivle08.big_project_api.filter.JWTTokenGeneratorFilter;
 import com.aivle08.big_project_api.filter.JWTTokenValidatorFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +33,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
 
-                .addFilterBefore(new JWTTokenValidatorFilter(),BasicAuthenticationFilter.class)
+                .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/h2-console/**",
