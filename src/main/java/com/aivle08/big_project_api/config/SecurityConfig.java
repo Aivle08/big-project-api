@@ -48,7 +48,8 @@ public class SecurityConfig {
                                 "/api/v1/users/register",
                                 "/api/v1/users/login",
                                 "/api/v1/applicant/**",
-                                "/api/v1/recruitment/**"
+                                "/api/v1/recruitment/**",
+                                "/api/v1/posts/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
