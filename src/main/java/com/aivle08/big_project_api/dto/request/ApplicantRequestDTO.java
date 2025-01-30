@@ -1,4 +1,4 @@
-package com.aivle08.big_project_api.dto.input;
+package com.aivle08.big_project_api.dto.request;
 
 
 import com.aivle08.big_project_api.model.Applicant;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApplicantInputDTO {
+public class ApplicantRequestDTO {
 
     private String name;
     private String email;
@@ -20,8 +20,8 @@ public class ApplicantInputDTO {
     private Boolean resumeResult;
     private String resumeSummary;
 
-    public static ApplicantInputDTO fromEntity(Applicant applicant) {
-        return new ApplicantInputDTO(applicant.getName(), applicant.getEmail(),
+    public static ApplicantRequestDTO fromEntity(Applicant applicant) {
+        return new ApplicantRequestDTO(applicant.getName(), applicant.getEmail(),
                 applicant.getContact(), applicant.getFileName(), false,
                 applicant.getResumeSummary());
     }

@@ -1,7 +1,7 @@
 package com.aivle08.big_project_api.service;
 
-import com.aivle08.big_project_api.dto.input.LoginInputDTO;
-import com.aivle08.big_project_api.dto.input.RegisterInputDTO;
+import com.aivle08.big_project_api.dto.request.LoginRequestDTO;
+import com.aivle08.big_project_api.dto.request.RegisterRequestDTO;
 import com.aivle08.big_project_api.model.Company;
 import com.aivle08.big_project_api.model.Department;
 import com.aivle08.big_project_api.model.Users;
@@ -17,7 +17,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 
 @Service
@@ -39,17 +38,17 @@ public class UsersService {
     }
 
     @Transactional
-    public Users registerUser(RegisterInputDTO registerInputDTO) {
+    public Users registerUser(RegisterRequestDTO registerRequestDTO) {
 
-        if (usersRepository.existsByUsername(registerInputDTO.getUsername())) {
+        if (usersRepository.existsByUsername(registerRequestDTO.getUsername())) {
             throw new IllegalArgumentException("The username already exists.");
         }
 
-        String encodedPassword = passwordEncoder.encode(registerInputDTO.getPassword());
+        String encodedPassword = passwordEncoder.encode(registerRequestDTO.getPassword());
 
-        Company company = companyRepository.findByName(registerInputDTO.getCompanyName())
+        Company company = companyRepository.findByName(registerRequestDTO.getCompanyName())
                 .orElseGet(() -> {
-                    Company newCompany = new Company(null, registerInputDTO.getCompanyName(), null);
+                    Company newCompany = new Company(null, registerRequestDTO.getCompanyName(), null);
                     return companyRepository.save(newCompany);
                 });
 
@@ -59,18 +58,18 @@ public class UsersService {
 //                    return departmentRepository.save(newDepartment);
 //                });
 
-        Department department = new Department(null, registerInputDTO.getDepartmentName(), company, null, null);
+        Department department = new Department(null, registerRequestDTO.getDepartmentName(), company, null, null);
         departmentRepository.save(department);
 
 
         Users user = new Users(
                 null,
-                registerInputDTO.getUserId(),
+                registerRequestDTO.getUserId(),
                 encodedPassword,
-                registerInputDTO.getUsername(),
-                registerInputDTO.getEmail(),
-                registerInputDTO.getPosition(),
-                registerInputDTO.getContact(),
+                registerRequestDTO.getUsername(),
+                registerRequestDTO.getEmail(),
+                registerRequestDTO.getPosition(),
+                registerRequestDTO.getContact(),
                 company,
                 department
         );
@@ -78,14 +77,14 @@ public class UsersService {
         return usersRepository.save(user);
     }
 
-    public String loginUser(LoginInputDTO loginInputDTO) {
+    public String loginUser(LoginRequestDTO loginRequestDTO) {
         try {
             UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(loginInputDTO.getId(), loginInputDTO.getPassword());
+                    new UsernamePasswordAuthenticationToken(loginRequestDTO.getId(), loginRequestDTO.getPassword());
 
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
-            String token = jwtTokenUtil.generateToken(loginInputDTO.getId());
+            String token = jwtTokenUtil.generateToken(loginRequestDTO.getId());
 
             return token;
 

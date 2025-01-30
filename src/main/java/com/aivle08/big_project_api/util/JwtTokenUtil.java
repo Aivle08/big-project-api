@@ -1,7 +1,7 @@
 package com.aivle08.big_project_api.util;
 
 import com.aivle08.big_project_api.constants.SecurityConstants;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 

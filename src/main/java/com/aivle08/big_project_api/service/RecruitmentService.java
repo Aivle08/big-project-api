@@ -1,8 +1,8 @@
 package com.aivle08.big_project_api.service;
 
-import com.aivle08.big_project_api.dto.EvaluationDTO;
-import com.aivle08.big_project_api.dto.input.RecruitmentInputDTO;
-import com.aivle08.big_project_api.dto.output.RecruitmentOutputDTO;
+import com.aivle08.big_project_api.dto.request.RecruitmentRequestDTO;
+import com.aivle08.big_project_api.dto.response.EvaluationResponseDTO;
+import com.aivle08.big_project_api.dto.response.RecruitmentResponseDTO;
 import com.aivle08.big_project_api.model.Department;
 import com.aivle08.big_project_api.model.Evaluation;
 import com.aivle08.big_project_api.model.Recruitment;
@@ -26,19 +26,19 @@ public class RecruitmentService {
         this.usersService = usersService;
     }
 
-    public List<RecruitmentOutputDTO> findAllRecruitment() {
+    public List<RecruitmentResponseDTO> findAllRecruitment() {
         return recruitmentRepository.findAllByDepartment(usersService.getCurrentUser().getDepartment())
-                .stream().map(RecruitmentOutputDTO::fromEntity).toList();
+                .stream().map(RecruitmentResponseDTO::fromEntity).toList();
     }
 
     @Transactional
-    public RecruitmentInputDTO createRecruitment(RecruitmentInputDTO recruitmentInputDTO) {
-        List<Evaluation> evaluations = recruitmentInputDTO.getEvaluationDTOList()
-                .stream().map(EvaluationDTO::toEntity).toList();
+    public RecruitmentRequestDTO createRecruitment(RecruitmentRequestDTO recruitmentRequestDTO) {
+        List<Evaluation> evaluations = recruitmentRequestDTO.getEvaluationResponseDTOList()
+                .stream().map(EvaluationResponseDTO::toEntity).toList();
 
         Department department = usersService.getCurrentUser().getDepartment();
 
-        Recruitment recruitment = new Recruitment(null, LocalDateTime.now(), LocalDateTime.now(), recruitmentInputDTO.getTitle(), recruitmentInputDTO.getJob(), evaluations, null, department);
+        Recruitment recruitment = new Recruitment(null, LocalDateTime.now(), LocalDateTime.now(), recruitmentRequestDTO.getTitle(), recruitmentRequestDTO.getJob(), evaluations, null, department);
         Recruitment savedRecruitment = recruitmentRepository.save(recruitment);
 
         List<Evaluation> evaluationList = evaluations
@@ -46,7 +46,7 @@ public class RecruitmentService {
                 .map((evaluation) -> new Evaluation(null, evaluation.getItem(), evaluation.getDetail(), null, savedRecruitment)).toList();
         List<Evaluation> savedEvaluations = evaluationRepository.saveAll(evaluationList);
 
-        RecruitmentInputDTO savedRecruitmentInputDTO = RecruitmentInputDTO.fromEntity(savedRecruitment);
-        return savedRecruitmentInputDTO;
+        RecruitmentRequestDTO savedRecruitmentRequestDTO = RecruitmentRequestDTO.fromEntity(savedRecruitment);
+        return savedRecruitmentRequestDTO;
     }
 }
