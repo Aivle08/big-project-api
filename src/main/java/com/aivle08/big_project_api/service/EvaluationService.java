@@ -13,7 +13,6 @@ import com.aivle08.big_project_api.repository.RecruitmentRepository;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -1,6 +1,5 @@
 package com.aivle08.big_project_api.dto.request;
 
-
 import com.aivle08.big_project_api.model.Applicant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
