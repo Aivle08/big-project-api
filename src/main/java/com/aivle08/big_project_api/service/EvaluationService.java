@@ -1,13 +1,9 @@
 package com.aivle08.big_project_api.service;
 
-import com.aivle08.big_project_api.dto.input.ApplicantInputDTO;
 import com.aivle08.big_project_api.model.EvaluationScore;
-import com.aivle08.big_project_api.model.Recruitment;
 import com.aivle08.big_project_api.repository.EvaluationScoreRepository;
-import com.aivle08.big_project_api.repository.RecruitmentRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
