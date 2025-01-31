@@ -1,7 +1,5 @@
 package com.aivle08.big_project_api.controller;
 
-import com.aivle08.big_project_api.dto.input.ApplicantInputDTO;
-import com.aivle08.big_project_api.dto.output.RecruitmentOutputDTO;
 import com.aivle08.big_project_api.service.ApplicantService;
 import com.aivle08.big_project_api.service.EvaluationService;
 import org.springframework.http.ResponseEntity;
