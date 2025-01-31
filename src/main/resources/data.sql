@@ -49,20 +49,20 @@ VALUES
     ('Bob White', 'bob.white@example.com', '456-789-0123', 'resume_bob_white.pdf', true, 'Passionate about data science and machine learning', 1,2);
 
 -- EvaluationDetail 테이블 데이터 삽입
-INSERT INTO evaluation_detail (summary)
+INSERT INTO evaluation_detail (summary, evaluation_id)
 VALUES
-    ('This is a detailed summary for John Doe''s evaluation'),
-    ('This is a detailed summary for Jane Smith''s evaluation'),
-    ('This is a detailed summary for Alice Brown''s evaluation'),
-    ('This is a detailed summary for Bob White''s evaluation');
+    ('This is a detailed summary for John Doe''s evaluation', 1),
+    ('This is a detailed summary for Jane Smith''s evaluation',1),
+    ('This is a detailed summary for Alice Brown''s evaluation',1),
+    ('This is a detailed summary for Bob White''s evaluation',1);
 -- 추가된 EvaluationDetail 데이터
-INSERT INTO evaluation_detail (summary)
+INSERT INTO evaluation_detail (summary, evaluation_id)
 VALUES
-    ('Detailed summary for evaluation 5 for Jane Smith'),
-    ('Detailed summary for evaluation 6 for Jane Smith'),
-    ('Detailed summary for evaluation 7 for Jane Smith'),
-    ('Detailed summary for evaluation 8 for Jane Smith'),
-    ('Detailed summary for evaluation 9 for Jane Smith');
+    ('Detailed summary for evaluation 5 for Jane Smith', 1),
+    ('Detailed summary for evaluation 6 for Jane Smith',1),
+    ('Detailed summary for evaluation 7 for Jane Smith',1),
+    ('Detailed summary for evaluation 8 for Jane Smith',1),
+    ('Detailed summary for evaluation 9 for Jane Smith',1);
 
 -- EvaluationScore 테이블 데이터 삽입
 INSERT INTO evaluation_score (applicant_id, score, evaluation_id, evaluation_detail_id)
@@ -79,3 +79,5 @@ VALUES
     (2, 65, 1, 7), -- EvaluationDetail ID = 7
     (2, 90, 1, 8), -- EvaluationDetail ID = 8
     (2, 85, 1, 9); -- EvaluationDetail ID = 9
+
+

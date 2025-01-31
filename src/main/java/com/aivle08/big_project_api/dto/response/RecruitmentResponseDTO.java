@@ -1,5 +1,6 @@
 package com.aivle08.big_project_api.dto.response;
 
+import com.aivle08.big_project_api.dto.request.EvaluationRequestDTO;
 import com.aivle08.big_project_api.model.Recruitment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -18,10 +19,10 @@ public class RecruitmentResponseDTO {
     private String job;
 
     @JsonProperty("evaluations")
-    private List<EvaluationResponseDTO> evaluationResponseDTOList;
+    private List<EvaluationRequestDTO> evaluationRequestDTOList;
 
     public static RecruitmentResponseDTO fromEntity(Recruitment recruitment) {
         return new RecruitmentResponseDTO(recruitment.getTitle(), recruitment.getJob(),
-                recruitment.getEvaluationList().stream().map(EvaluationResponseDTO::fromEntity).toList());
+                recruitment.getEvaluationList().stream().map(EvaluationRequestDTO::fromEntity).toList());
     }
 }

@@ -1,7 +1,7 @@
 package com.aivle08.big_project_api.service;
 
 import com.aivle08.big_project_api.dto.request.RecruitmentRequestDTO;
-import com.aivle08.big_project_api.dto.response.EvaluationResponseDTO;
+import com.aivle08.big_project_api.dto.request.EvaluationRequestDTO;
 import com.aivle08.big_project_api.dto.response.RecruitmentResponseDTO;
 import com.aivle08.big_project_api.model.Department;
 import com.aivle08.big_project_api.model.Evaluation;
@@ -33,8 +33,8 @@ public class RecruitmentService {
 
     @Transactional
     public RecruitmentRequestDTO createRecruitment(RecruitmentRequestDTO recruitmentRequestDTO) {
-        List<Evaluation> evaluations = recruitmentRequestDTO.getEvaluationResponseDTOList()
-                .stream().map(EvaluationResponseDTO::toEntity).toList();
+        List<Evaluation> evaluations = recruitmentRequestDTO.getEvaluationRequestDTOList()
+                .stream().map(EvaluationRequestDTO::toEntity).toList();
 
         Department department = usersService.getCurrentUser().getDepartment();
 
