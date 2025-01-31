@@ -1,5 +1,9 @@
 package com.aivle08.big_project_api.controller;
 
+import com.aivle08.big_project_api.dto.request.ApplicantRequestDTO;
+import com.aivle08.big_project_api.dto.response.EvaluationDetailResponseDTO;
+import com.aivle08.big_project_api.dto.response.EvaluationResponseDTO;
+import com.aivle08.big_project_api.dto.response.RecruitmentResponseDTO;
 import com.aivle08.big_project_api.service.ApplicantService;
 import com.aivle08.big_project_api.service.EvaluationService;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +25,9 @@ public class EvaluationController {
         this.evaluationService = evaluationService;
     }
 
-    @GetMapping("applicant/scores")
-    public ResponseEntity<Map<Long, List<Long>>> getScoresByApplicantId(@PathVariable Long recruitmentId) {
-        Map<Long, List<Long>> scoresByApplicant = evaluationService.getScoresByApplicantIdandRecruitmentId(recruitmentId);
+    @GetMapping("applicant/{applicantId}/scores")
+    public ResponseEntity<EvaluationResponseDTO> getScoresByApplicantId(@PathVariable Long recruitmentId, @PathVariable Long applicantId) {
+        EvaluationResponseDTO scoresByApplicant = evaluationService.getScoresByApplicantIdandRecruitmentId(recruitmentId, applicantId);
         return ResponseEntity.ok(scoresByApplicant);
     }
 }

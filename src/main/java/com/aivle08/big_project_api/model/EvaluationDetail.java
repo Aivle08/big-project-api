@@ -14,4 +14,9 @@ public class EvaluationDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String summary;
+
+    @ManyToOne
+    @JoinColumn(name = "evaluation_id")
+    private Evaluation evaluation;
+
 }
