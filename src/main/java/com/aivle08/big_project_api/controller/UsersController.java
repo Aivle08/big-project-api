@@ -1,54 +1,61 @@
 package com.aivle08.big_project_api.controller;
 
+import com.aivle08.big_project_api.dto.request.LoginRequestDTO;
+import com.aivle08.big_project_api.dto.request.RegisterRequestDTO;
 import com.aivle08.big_project_api.model.Users;
-import com.aivle08.big_project_api.model.UsersDetails;
-import com.aivle08.big_project_api.dto.input.LoginInputDTO;
-import com.aivle08.big_project_api.dto.input.RegisterInputDTO;
-import com.aivle08.big_project_api.repository.UsersRepository;
-import com.aivle08.big_project_api.service.UsersDetailsService;
 import com.aivle08.big_project_api.service.UsersService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/users")
+@Tag(name = "Auth API", description = "사용자 조회 및 회원가입 API")
 public class UsersController {
 
     private final UsersService usersService;
-    private final UsersDetailsService usersDetailsService;
-    private final UsersRepository usersRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    public UsersController(UsersService usersService, UsersDetailsService usersDetailsService, UsersRepository usersRepository, PasswordEncoder passwordEncoder) {
+    public UsersController(UsersService usersService) {
         this.usersService = usersService;
-        this.usersDetailsService = usersDetailsService;
-        this.usersRepository = usersRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterInputDTO registerInputDTO) {
-        usersService.registerUser(registerInputDTO);
+    @Operation(summary = "회원가입")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "회원가입 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청")
+    })
+    public ResponseEntity<String> register(@RequestBody RegisterRequestDTO registerRequestDTO) {
+        usersService.registerUser(registerRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginInputDTO loginInputDTO) {
-
-        Users users = usersRepository.findByUsername(loginInputDTO.getUserId());
-        UsersDetails userDetails = (UsersDetails) usersDetailsService.loadUserByUsername(loginInputDTO.getUserId());
-        System.out.println(userDetails);
-
-        System.out.println(userDetails.getPassword());
-
-
-        if (passwordEncoder.matches(loginInputDTO.getPassword(),userDetails.getPassword())) {
-            return ResponseEntity.ok("Login successful!");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
-        }
+    @Operation(summary = "로그인")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "로그인 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청")
+    })
+    public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+        String jwt = usersService.loginUser(loginRequestDTO);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + jwt)
+                .body("Login successful!");
     }
+
+    @GetMapping
+    @Operation(summary = "사용자 정보 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "사용자 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청")
+    })
+    public ResponseEntity<Users> getUsers() {
+        Users user = usersService.getCurrentUser();
+        return ResponseEntity.ok().body(user);
+    }
+
 }

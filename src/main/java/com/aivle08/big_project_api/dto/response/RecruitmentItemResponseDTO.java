@@ -1,5 +1,4 @@
-package com.aivle08.big_project_api.dto.input;
-
+package com.aivle08.big_project_api.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginInputDTO {
-    private String userId;
-    private String password;
+public class RecruitmentItemResponseDTO {
+    private String title;
+    private String job;
 }
