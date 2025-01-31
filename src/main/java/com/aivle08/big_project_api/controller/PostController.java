@@ -1,20 +1,26 @@
 package com.aivle08.big_project_api.controller;
 
 import com.aivle08.big_project_api.dto.request.PostRequestDTO;
+import com.aivle08.big_project_api.dto.response.PostListResponseDTO;
 import com.aivle08.big_project_api.dto.response.PostResponseDTO;
+import com.aivle08.big_project_api.model.Post;
+import com.aivle08.big_project_api.repository.PostRepository;
 import com.aivle08.big_project_api.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/posts")
 public class PostController {
 
+    private final PostRepository postRepository;
     private final PostService postService;
 
-    public PostController(PostService postService) {
+    public PostController(PostRepository postRepository, PostService postService) {
+        this.postRepository = postRepository;
         this.postService = postService;
     }
 
@@ -25,9 +31,15 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostResponseDTO>> getAllPosts() {
-        List<PostResponseDTO> posts = postService.getAllPosts();
-        return ResponseEntity.ok(posts);
+    public PostListResponseDTO<PostResponseDTO> getAllPosts() {
+        List<Post> posts = postRepository.findAll(); // 모든 게시글 조회
+        long totalCount = posts.size(); // 총 게시글 수 계산
+
+        List<PostResponseDTO> postDTOs = posts.stream()
+                .map(PostResponseDTO::fromEntity)
+                .collect(Collectors.toList());
+
+        return new PostListResponseDTO<>(postDTOs, totalCount);
     }
 
     @GetMapping("/{id}")

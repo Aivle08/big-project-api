@@ -1,6 +1,7 @@
 package com.aivle08.big_project_api.service;
 
 import com.aivle08.big_project_api.dto.request.PostRequestDTO;
+import com.aivle08.big_project_api.dto.response.PostListResponseDTO;
 import com.aivle08.big_project_api.dto.response.PostResponseDTO;
 import com.aivle08.big_project_api.model.Post;
 import com.aivle08.big_project_api.model.Users;
@@ -26,16 +27,22 @@ public class PostService {
         Users author = usersRepository.findByUsername(postRequestDTO.getAuthorId());
 //                .orElseThrow(() -> new RuntimeException("작성자(User)가 존재하지 않습니다."));
 
-        Post post = new Post(postRequestDTO.getTitle(), postRequestDTO.getContent(), author);
+        Post post = new Post(postRequestDTO.getTitle(), postRequestDTO.getContent(), author );
         Post savedPost = postRepository.save(post);
 
         return PostResponseDTO.fromEntity(savedPost);
     }
 
-    public List<PostResponseDTO> getAllPosts() {
-        return postRepository.findAll().stream()
+
+    public PostListResponseDTO<PostResponseDTO> getAllPosts() {
+        List<Post> posts = postRepository.findAll();
+        long totalCount = posts.size();
+
+        List<PostResponseDTO> postDTOs = posts.stream()
                 .map(PostResponseDTO::fromEntity)
                 .collect(Collectors.toList());
+
+        return new PostListResponseDTO<>(postDTOs, totalCount);
     }
 
     public PostResponseDTO getPostById(Long id) {
