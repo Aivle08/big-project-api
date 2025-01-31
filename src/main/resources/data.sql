@@ -25,12 +25,12 @@ VALUES
     ('emily123', 'admin123', 'Emily Davids', 'emilydavids@example.com', 'Finance Officer', 1, '111-1111-11111', 5);
 
 -- Recruitment 테이블 데이터 삽입
-INSERT INTO recruitment (created_date, updated_date, title, job)
+INSERT INTO recruitment (created_date, updated_date, title, job, department_id)
 VALUES
-    (TIMESTAMP '2025-01-09 10:30:00', TIMESTAMP '2025-01-09 10:30:00', 'Software Engineer', 'Develop and maintain software applications'),
-    (TIMESTAMP '2025-01-10 11:00:00', TIMESTAMP '2025-01-10 11:00:00', 'HR Manager', 'Manage recruitment and employee relations'),
-    (TIMESTAMP '2025-01-11 12:00:00', TIMESTAMP '2025-01-11 12:00:00', 'Data Scientist', 'Analyze and interpret complex data'),
-    (TIMESTAMP '2025-01-12 13:30:00', TIMESTAMP '2025-01-12 13:30:00', 'Marketing Strategist', 'Create and execute marketing plans');
+    (TIMESTAMP '2025-01-09 10:30:00', TIMESTAMP '2025-01-09 10:30:00', 'Software Engineer', 'Develop and maintain software applications',1),
+    (TIMESTAMP '2025-01-10 11:00:00', TIMESTAMP '2025-01-10 11:00:00', 'HR Manager', 'Manage recruitment and employee relations', 1),
+    (TIMESTAMP '2025-01-11 12:00:00', TIMESTAMP '2025-01-11 12:00:00', 'Data Scientist', 'Analyze and interpret complex data', 1),
+    (TIMESTAMP '2025-01-12 13:30:00', TIMESTAMP '2025-01-12 13:30:00', 'Marketing Strategist', 'Create and execute marketing plans', 1);
 
 -- Evaluation 테이블 데이터 삽입
 INSERT INTO evaluation (item, detail, recruitment_id)
@@ -41,12 +41,12 @@ VALUES
     ('Cultural Fit', 'Evaluate how well the candidate fits into the company culture', 1);
 
 -- Applicant 테이블 데이터 삽입
-INSERT INTO applicant (name, email, contact, file_name, resume_result, resume_summary, department_id)
+INSERT INTO applicant (name, email, contact, file_name, resume_result, resume_summary, department_id, recruitment_id)
 VALUES
-    ('John Doe', 'john.doe@example.com', '123-456-7890', 'resume_john_doe.pdf', true, 'Experienced software developer', 1),
-    ('Jane Smith', 'jane.smith@example.com', '234-567-8901', 'resume_jane_smith.pdf', false, 'Junior developer seeking new opportunities', 1),
-    ('Alice Brown', 'alice.brown@example.com', '345-678-9012', 'resume_alice_brown.pdf', true, 'Experienced marketer with strong strategic skills', 1),
-    ('Bob White', 'bob.white@example.com', '456-789-0123', 'resume_bob_white.pdf', true, 'Passionate about data science and machine learning', 1);
+    ('John Doe', 'john.doe@example.com', '123-456-7890', 'resume_john_doe.pdf', true, 'Experienced software developer', 1, 2),
+    ('Jane Smith', 'jane.smith@example.com', '234-567-8901', 'resume_jane_smith.pdf', false, 'Junior developer seeking new opportunities', 1,2),
+    ('Alice Brown', 'alice.brown@example.com', '345-678-9012', 'resume_alice_brown.pdf', true, 'Experienced marketer with strong strategic skills', 1,2),
+    ('Bob White', 'bob.white@example.com', '456-789-0123', 'resume_bob_white.pdf', true, 'Passionate about data science and machine learning', 1,2);
 
 -- EvaluationDetail 테이블 데이터 삽입
 INSERT INTO evaluation_detail (summary)
@@ -55,7 +55,14 @@ VALUES
     ('This is a detailed summary for Jane Smith''s evaluation'),
     ('This is a detailed summary for Alice Brown''s evaluation'),
     ('This is a detailed summary for Bob White''s evaluation');
-
+-- 추가된 EvaluationDetail 데이터
+INSERT INTO evaluation_detail (summary)
+VALUES
+    ('Detailed summary for evaluation 5 for Jane Smith'),
+    ('Detailed summary for evaluation 6 for Jane Smith'),
+    ('Detailed summary for evaluation 7 for Jane Smith'),
+    ('Detailed summary for evaluation 8 for Jane Smith'),
+    ('Detailed summary for evaluation 9 for Jane Smith');
 
 -- EvaluationScore 테이블 데이터 삽입
 INSERT INTO evaluation_score (applicant_id, score, evaluation_id, evaluation_detail_id)
@@ -64,3 +71,11 @@ VALUES
     (2, 70, 1, 2),
     (3, 95, 1, 3),
     (4, 80, 1, 4);
+-- 추가된 EvaluationScore 데이터
+INSERT INTO evaluation_score (applicant_id, score, evaluation_id, evaluation_detail_id)
+VALUES
+    (2, 75, 1, 5), -- EvaluationDetail ID = 5
+    (2, 80, 1, 6), -- EvaluationDetail ID = 6
+    (2, 65, 1, 7), -- EvaluationDetail ID = 7
+    (2, 90, 1, 8), -- EvaluationDetail ID = 8
+    (2, 85, 1, 9); -- EvaluationDetail ID = 9

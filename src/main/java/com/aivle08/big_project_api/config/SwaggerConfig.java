@@ -27,6 +27,7 @@ public class SwaggerConfig {
                 )
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
     }
+
     private Info apiInfo() {
         return new Info()
                 .title("AIVLE 08 API Test")

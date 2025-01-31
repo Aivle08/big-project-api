@@ -25,6 +25,9 @@ public class Recruitment {
     @OneToMany(mappedBy = "recruitment")
     private List<Evaluation> evaluationList;
 
+    @OneToMany(mappedBy = "recruitment")
+    private List<Applicant> applicantList;
+
     @ManyToOne
     @JsonIgnore
     private Department department;
