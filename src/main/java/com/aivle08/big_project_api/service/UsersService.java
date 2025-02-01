@@ -48,31 +48,37 @@ public class UsersService {
 
         Company company = companyRepository.findByName(registerRequestDTO.getCompanyName())
                 .orElseGet(() -> {
-                    Company newCompany = new Company(null, registerRequestDTO.getCompanyName(), null);
+                    Company newCompany = Company.builder()
+                            .name(registerRequestDTO.getCompanyName())
+                            .build();
                     return companyRepository.save(newCompany);
                 });
 
+        //todo: 여기 회사 예외처리 반드시 필요함!
 //        Department department = departmentRepository.findByNameAndCompany(registerInputDTO.getDepartmentName(), company)
 //                .orElseGet(() -> {
 //                    Department newDepartment = new Department(null, registerInputDTO.getDepartmentName(), company, null, null);
 //                    return departmentRepository.save(newDepartment);
 //                });
 
-        Department department = new Department(null, registerRequestDTO.getDepartmentName(), company, null, null);
+        Department department = Department.builder()
+                .name(registerRequestDTO.getDepartmentName())
+                .company(company)
+                .build();
         departmentRepository.save(department);
 
 
-        Users user = new Users(
-                null,
-                registerRequestDTO.getUserId(),
-                encodedPassword,
-                registerRequestDTO.getUsername(),
-                registerRequestDTO.getEmail(),
-                registerRequestDTO.getPosition(),
-                registerRequestDTO.getContact(),
-                company,
-                department
-        );
+        Users user = Users.builder()
+                .username(registerRequestDTO.getUserId())
+                .name(registerRequestDTO.getUsername())
+                .password(encodedPassword)
+                .email(registerRequestDTO.getEmail())
+                .position(registerRequestDTO.getPosition())
+                .contact(registerRequestDTO.getContact())
+                .company(company)
+                .department(department)
+                .build();
+
 
         return usersRepository.save(user);
     }

@@ -1,21 +1,13 @@
 package com.aivle08.big_project_api.service;
 
-import com.aivle08.big_project_api.dto.request.ApplicantRequestDTO;
 import com.aivle08.big_project_api.dto.response.EvaluationDetailResponseDTO;
 import com.aivle08.big_project_api.dto.response.EvaluationResponseDTO;
-import com.aivle08.big_project_api.model.EvaluationDetail;
-import com.aivle08.big_project_api.model.EvaluationScore;
-import com.aivle08.big_project_api.model.Recruitment;
 import com.aivle08.big_project_api.repository.ApplicantRepository;
-import com.aivle08.big_project_api.repository.EvaluationRepository;
 import com.aivle08.big_project_api.repository.EvaluationScoreRepository;
 import com.aivle08.big_project_api.repository.RecruitmentRepository;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class EvaluationService {
@@ -24,14 +16,12 @@ public class EvaluationService {
     private final ApplicantService applicantService;
     private final RecruitmentRepository recruitmentRepository;
     private final ApplicantRepository applicantRepository;
-    private final EvaluationRepository evaluationRepository;
 
-    public EvaluationService(EvaluationScoreRepository evaluationScoreRepository, ApplicantService applicantService, RecruitmentRepository recruitmentRepository, ApplicantRepository applicantRepository, EvaluationRepository evaluationRepository) {
+    public EvaluationService(EvaluationScoreRepository evaluationScoreRepository, ApplicantService applicantService, RecruitmentRepository recruitmentRepository, ApplicantRepository applicantRepository) {
         this.evaluationScoreRepository = evaluationScoreRepository;
         this.applicantService = applicantService;
         this.recruitmentRepository = recruitmentRepository;
         this.applicantRepository = applicantRepository;
-        this.evaluationRepository = evaluationRepository;
     }
 
     public EvaluationResponseDTO getScoresByApplicantIdandRecruitmentId(Long recruitmentId, Long applicantId) {
@@ -56,14 +46,18 @@ public class EvaluationService {
                             .getEvaluation()
                             .getItem();
 
-                    return new EvaluationDetailResponseDTO(
-                            evaluationScore.getScore(),
-                            summary,
-                            item
-                    );
+                    return EvaluationDetailResponseDTO.builder()
+                            .score(evaluationScore.getScore())
+                            .summary(summary)
+                            .title(item)
+                            .build();
                 })
                 .toList();
-
-        return new EvaluationResponseDTO(recruitmentTitle, applicationName, scoreDetails);
+        
+        return EvaluationResponseDTO.builder()
+                .recruitmentTitle(recruitmentTitle)
+                .applicationName(applicationName)
+                .scoreDetails(scoreDetails)
+                .build();
     }
 }

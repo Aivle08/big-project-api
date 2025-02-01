@@ -3,10 +3,7 @@ package com.aivle08.big_project_api.dto.response;
 import com.aivle08.big_project_api.dto.request.EvaluationRequestDTO;
 import com.aivle08.big_project_api.model.Recruitment;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,6 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class RecruitmentResponseDTO {
     private String title;
     private String job;

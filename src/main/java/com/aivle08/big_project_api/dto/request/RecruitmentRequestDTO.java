@@ -2,10 +2,7 @@ package com.aivle08.big_project_api.dto.request;
 
 import com.aivle08.big_project_api.model.Recruitment;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,6 +10,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class RecruitmentRequestDTO {
     private String title;
     private String job;
@@ -20,7 +18,10 @@ public class RecruitmentRequestDTO {
     private List<EvaluationRequestDTO> evaluationRequestDTOList;
 
     public static RecruitmentRequestDTO fromEntity(Recruitment recruitment) {
-        return new RecruitmentRequestDTO(recruitment.getTitle(), recruitment.getJob(),
-                recruitment.getEvaluationList().stream().map(EvaluationRequestDTO::fromEntity).toList());
+        return RecruitmentRequestDTO.builder()
+                .title(recruitment.getTitle())
+                .job(recruitment.getJob())
+                .evaluationRequestDTOList(recruitment.getEvaluationList().stream().map(EvaluationRequestDTO::fromEntity).toList())
+                .build();
     }
 }

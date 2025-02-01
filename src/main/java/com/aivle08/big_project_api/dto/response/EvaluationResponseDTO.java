@@ -1,10 +1,6 @@
 package com.aivle08.big_project_api.dto.response;
 
-import com.aivle08.big_project_api.model.EvaluationScore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -12,6 +8,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class EvaluationResponseDTO {
     private String recruitmentTitle;
     private String applicationName;

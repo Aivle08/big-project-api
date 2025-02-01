@@ -45,17 +45,15 @@ public class ApplicantService {
     public ApplicantRequestDTO applicantCreate(ApplicantRequestDTO applicantRequestDTO, Long recruitmentId) {
         Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElse(null);
 
-        Applicant applicant = new Applicant(
-                null,
-                applicantRequestDTO.getName(),
-                applicantRequestDTO.getEmail(),
-                applicantRequestDTO.getContact(),
-                applicantRequestDTO.getFileName(),
-                false,
-                applicantRequestDTO.getResumeSummary(),
-                null,
-                recruitment
-        );
+        Applicant applicant = Applicant.builder()
+                .name(applicantRequestDTO.getName())
+                .email(applicantRequestDTO.getEmail())
+                .contact(applicantRequestDTO.getContact())
+                .fileName(applicantRequestDTO.getFileName())
+                .resumeResult(false)
+                .resumeSummary(applicantRequestDTO.getResumeSummary())
+                .recruitment(recruitment)
+                .build();
 
         Applicant savedApplicant = applicantRepository.save(applicant);
 
