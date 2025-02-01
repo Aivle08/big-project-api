@@ -103,4 +103,8 @@ public class UsersService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return usersRepository.findByUsername(authentication.getName());
     }
+
+    public Boolean checkUsername(String username) {
+        return usersRepository.existsByUsername(username);
+    }
 }
