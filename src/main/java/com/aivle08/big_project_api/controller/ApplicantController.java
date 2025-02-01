@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 // TODO: 예외처리 추가 및 반환 값 지정
-
 @RestController
 @RequestMapping("/api/v1/recruitment/{id}")
 @Tag(name = "Applicant API", description = "지원자 조회 API")
