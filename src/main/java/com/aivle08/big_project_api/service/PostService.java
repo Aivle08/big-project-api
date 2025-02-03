@@ -9,6 +9,7 @@ import com.aivle08.big_project_api.repository.PostRepository;
 import com.aivle08.big_project_api.repository.UsersRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,8 +27,16 @@ public class PostService {
     public PostResponseDTO createPost(PostRequestDTO postRequestDTO) {
         Users author = usersRepository.findByUsername(postRequestDTO.getAuthorId());
 
-        Post post = new Post(postRequestDTO.getTitle(), postRequestDTO.getContent(), author);
-        Post savedPost = postRepository.save(post);
+        Post createdPost = Post.builder()
+
+                .title(postRequestDTO.getTitle())
+                .content(postRequestDTO.getContent())
+                .author(author)
+                .updatedAt(null)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Post savedPost = postRepository.save(createdPost);
 
         return PostResponseDTO.fromEntity(savedPost);
     }
@@ -54,10 +63,18 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 
-        post.updatePost(requestDto.getTitle(), requestDto.getContent());
-        Post updatedPost = postRepository.save(post);
+        Post updatedPost = Post.builder()
+                .id(post.getId())
+                .title(requestDto.getTitle())
+                .content(requestDto.getContent())
+                .author(post.getAuthor())
+                .updatedAt(LocalDateTime.now())
+                .createdAt(post.getCreatedAt())
+                .build();
 
-        return PostResponseDTO.fromEntity(updatedPost);
+        Post savedPost = postRepository.save(updatedPost);
+
+        return PostResponseDTO.fromEntity(savedPost);
     }
 
     public void deletePost(Long id) {

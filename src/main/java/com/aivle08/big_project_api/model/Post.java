@@ -22,7 +22,7 @@ public class Post {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "author_id")
     private Users author;
 
@@ -39,9 +39,4 @@ public class Post {
         this.createdAt = LocalDateTime.now();
     }
 
-    public void updatePost(String title, String content) {
-        this.title = title;
-        this.content = content;
-        this.updatedAt = LocalDateTime.now();
-    }
 }
