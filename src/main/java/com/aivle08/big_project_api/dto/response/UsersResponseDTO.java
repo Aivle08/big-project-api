@@ -1,19 +1,16 @@
 package com.aivle08.big_project_api.dto.response;
 
-import com.aivle08.big_project_api.model.Department;
 import com.aivle08.big_project_api.model.Users;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UsersResponseDTO {
     private String name;
     private String companyName;
@@ -24,21 +21,23 @@ public class UsersResponseDTO {
     private List<RecruitmentItemResponseDTO> recruitmentItemResponseDTOList;
 
     public static UsersResponseDTO fromEntity(Users users) {
-        UsersResponseDTO usersResponseDTO = new UsersResponseDTO();
-        usersResponseDTO.setName(users.getName());
-        usersResponseDTO.setCompanyName(users.getCompany().getName());
-        usersResponseDTO.setEmail(users.getEmail());
-        usersResponseDTO.setContact(users.getContact());
-        usersResponseDTO.setDepartmentName(users.getDepartment().getName());
-        usersResponseDTO.setPosition(users.getPosition());
-        List<RecruitmentItemResponseDTO> recruitmentItemResponseDTOS = new ArrayList<>();
-        for (Department d : users.getCompany().getDepartmentList()) {
-            RecruitmentItemResponseDTO recruitmentItemResponseDTO = new RecruitmentItemResponseDTO();
-            recruitmentItemResponseDTO.setJob(d.getName());
-            recruitmentItemResponseDTO.setTitle(d.getName());
-            recruitmentItemResponseDTOS.add(recruitmentItemResponseDTO);
-        }
-        usersResponseDTO.setRecruitmentItemResponseDTOList(recruitmentItemResponseDTOS);
-        return usersResponseDTO;
+        List<RecruitmentItemResponseDTO> recruitmentItemResponseDTOS =
+                users.getCompany().getDepartmentList()
+                        .stream()
+                        .map(d -> RecruitmentItemResponseDTO.builder()
+                                .job(d.getName())
+                                .title(d.getName())
+                                .build())
+                        .collect(Collectors.toList());
+
+        return UsersResponseDTO.builder()
+                .name(users.getName())
+                .companyName(users.getCompany().getName())
+                .email(users.getEmail())
+                .contact(users.getContact())
+                .departmentName(users.getDepartment().getName())
+                .position(users.getPosition())
+                .recruitmentItemResponseDTOList(recruitmentItemResponseDTOS)
+                .build();
     }
 }

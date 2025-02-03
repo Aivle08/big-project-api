@@ -1,25 +1,29 @@
 package com.aivle08.big_project_api.dto.request;
 
 import com.aivle08.big_project_api.model.Evaluation;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class EvaluationRequestDTO {
     private String item;
     private String detail;
 
     public static Evaluation toEntity(EvaluationRequestDTO evaluationRequestDTO) {
-        return new Evaluation(null, evaluationRequestDTO.getItem(), evaluationRequestDTO.getDetail(), null, null);
+        return Evaluation.builder()
+                .item(evaluationRequestDTO.getItem())
+                .detail(evaluationRequestDTO.getDetail())
+                .build();
     }
 
     public static EvaluationRequestDTO fromEntity(Evaluation evaluation) {
-        return new EvaluationRequestDTO(evaluation.getItem(), evaluation.getDetail());
+        return EvaluationRequestDTO.builder()
+                .item(evaluation.getItem())
+                .detail(evaluation.getDetail())
+                .build();
     }
 
 }

@@ -25,9 +25,8 @@ public class PostService {
 
     public PostResponseDTO createPost(PostRequestDTO postRequestDTO) {
         Users author = usersRepository.findByUsername(postRequestDTO.getAuthorId());
-//                .orElseThrow(() -> new RuntimeException("작성자(User)가 존재하지 않습니다."));
 
-        Post post = new Post(postRequestDTO.getTitle(), postRequestDTO.getContent(), author );
+        Post post = new Post(postRequestDTO.getTitle(), postRequestDTO.getContent(), author);
         Post savedPost = postRepository.save(post);
 
         return PostResponseDTO.fromEntity(savedPost);

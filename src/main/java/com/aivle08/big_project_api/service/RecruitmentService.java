@@ -1,7 +1,7 @@
 package com.aivle08.big_project_api.service;
 
-import com.aivle08.big_project_api.dto.request.RecruitmentRequestDTO;
 import com.aivle08.big_project_api.dto.request.EvaluationRequestDTO;
+import com.aivle08.big_project_api.dto.request.RecruitmentRequestDTO;
 import com.aivle08.big_project_api.dto.response.RecruitmentResponseDTO;
 import com.aivle08.big_project_api.model.Department;
 import com.aivle08.big_project_api.model.Evaluation;
@@ -38,12 +38,24 @@ public class RecruitmentService {
 
         Department department = usersService.getCurrentUser().getDepartment();
 
-        Recruitment recruitment = new Recruitment(null, LocalDateTime.now(), LocalDateTime.now(), recruitmentRequestDTO.getTitle(), recruitmentRequestDTO.getJob(), evaluations, null, department);
+        Recruitment recruitment = Recruitment.builder()
+                .createdDate(LocalDateTime.now())
+                .updatedDate(LocalDateTime.now())
+                .title(recruitmentRequestDTO.getTitle())
+                .job(recruitmentRequestDTO.getJob())
+                .evaluationList(evaluations)
+                .department(department)
+                .build();
+
         Recruitment savedRecruitment = recruitmentRepository.save(recruitment);
 
-        List<Evaluation> evaluationList = evaluations
-                .stream()
-                .map((evaluation) -> new Evaluation(null, evaluation.getItem(), evaluation.getDetail(), null, savedRecruitment)).toList();
+        List<Evaluation> evaluationList = evaluations.stream()
+                .map(evaluation -> Evaluation.builder()
+                        .item(evaluation.getItem())
+                        .detail(evaluation.getDetail())
+                        .recruitment(savedRecruitment)
+                        .build())
+                .toList();
         List<Evaluation> savedEvaluations = evaluationRepository.saveAll(evaluationList);
 
         RecruitmentRequestDTO savedRecruitmentRequestDTO = RecruitmentRequestDTO.fromEntity(savedRecruitment);

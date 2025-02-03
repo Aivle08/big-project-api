@@ -9,9 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EvaluationResponseDTO {
+public class PassedApplicantResponseDTO {
     private String recruitmentTitle;
-    private String applicationName;
-
-    private List<EvaluationDetailResponseDTO> scoreDetails;
+    private List<EvaluationResponseDTO> passList;
 }
