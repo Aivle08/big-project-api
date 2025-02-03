@@ -35,7 +35,7 @@ public class RecruitmentController {
     }
 
     @PostMapping
-    @Operation(summary = "지원자 리스트 조회")
+    @Operation(summary = "채용 공고 리스트 저장")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "공고 리스트 저장 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
