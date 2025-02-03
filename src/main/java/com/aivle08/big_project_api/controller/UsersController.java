@@ -74,4 +74,20 @@ public class UsersController {
         }
     }
 
+    @PostMapping("/initiate-email")
+    public ResponseEntity<String> initiateEmail(@RequestParam String email) {
+        usersService.initiateEmailRegistration(email);
+        return ResponseEntity.ok("Please check your email to verify.");
+    }
+
+    @GetMapping("/verify-email")
+    public ResponseEntity<String> verifyEmail(@RequestParam String token) {
+        boolean success = usersService.verifyEmail(token);
+        if (success) {
+            return ResponseEntity.ok("Email verified! Now you can complete registration.");
+        } else {
+            return ResponseEntity.badRequest().body("Invalid token.");
+        }
+    }
+
 }
