@@ -47,9 +47,12 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/api/v1/users/register",
                                 "/api/v1/users/login",
+                                "/api/v1/users/check-username",
                                 "/api/v1/applicant/**",
                                 "/api/v1/recruitment/**",
-                                "/api/v1/posts/**"
+                                "/api/v1/posts/**",
+                                "/api/v1/users/initiate-email",
+                                "/api/v1/users/verify-email"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -65,6 +68,7 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of("http://localhost:3000"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         config.setAllowedHeaders(List.of("*"));
+        config.addExposedHeader("Authorization");
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

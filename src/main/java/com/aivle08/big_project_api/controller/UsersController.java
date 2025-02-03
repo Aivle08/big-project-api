@@ -58,4 +58,36 @@ public class UsersController {
         return ResponseEntity.ok().body(user);
     }
 
+
+    @GetMapping("/check-username")
+    @Operation(summary = "아이디 중복 확인")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "사용 가능한 아이디"),
+            @ApiResponse(responseCode = "409", description = "이미 사용중인 아이디")
+    })
+    public ResponseEntity<Boolean> checkUsername(@RequestParam("username") String username) {
+        boolean isAvailable = usersService.checkUsername(username);
+        if (!isAvailable) {
+            return ResponseEntity.ok(!isAvailable);
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(!isAvailable);
+        }
+    }
+
+    @PostMapping("/initiate-email")
+    public ResponseEntity<String> initiateEmail(@RequestParam String email) {
+        usersService.initiateEmailRegistration(email);
+        return ResponseEntity.ok("Please check your email to verify.");
+    }
+
+    @GetMapping("/verify-email")
+    public ResponseEntity<String> verifyEmail(@RequestParam String token) {
+        boolean success = usersService.verifyEmail(token);
+        if (success) {
+            return ResponseEntity.ok("Email verified! Now you can complete registration.");
+        } else {
+            return ResponseEntity.badRequest().body("Invalid token.");
+        }
+    }
+
 }
