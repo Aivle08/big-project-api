@@ -1,9 +1,7 @@
 package com.aivle08.big_project_api.controller;
 
 import com.aivle08.big_project_api.dto.request.PostRequestDTO;
-import com.aivle08.big_project_api.dto.response.PostListResponseDTO;
 import com.aivle08.big_project_api.dto.response.PostResponseDTO;
-import com.aivle08.big_project_api.model.Post;
 import com.aivle08.big_project_api.repository.PostRepository;
 import com.aivle08.big_project_api.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,15 +44,9 @@ public class PostController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "게시글 목록 조회 성공"),
     })
-    public PostListResponseDTO<PostResponseDTO> getAllPosts() {
-        List<Post> posts = postRepository.findAll();
-        long totalCount = posts.size();
-
-        List<PostResponseDTO> postDTOs = posts.stream()
-                .map(PostResponseDTO::fromEntity)
-                .collect(Collectors.toList());
-
-        return new PostListResponseDTO<>(postDTOs, totalCount);
+    public ResponseEntity<List<PostResponseDTO>> getPostsByCompany() {
+        List<PostResponseDTO> posts = postService.getPostsByCompany();
+        return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/{id}")
