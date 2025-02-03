@@ -18,6 +18,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 
 @Service
 public class UsersService {
@@ -27,14 +29,16 @@ public class UsersService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
+    private final EmailService emailService;
 
-    public UsersService(UsersRepository usersRepository, DepartmentRepository departmentRepository, CompanyRepository companyRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil) {
+    public UsersService(UsersRepository usersRepository, DepartmentRepository departmentRepository, CompanyRepository companyRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil, EmailService emailService) {
         this.usersRepository = usersRepository;
         this.departmentRepository = departmentRepository;
         this.companyRepository = companyRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.emailService = emailService;
     }
 
     @Transactional
@@ -42,6 +46,16 @@ public class UsersService {
 
         if (usersRepository.existsByUsername(registerRequestDTO.getUsername())) {
             throw new IllegalArgumentException("The username already exists.");
+        }
+
+        Users user = usersRepository.findByEmail(registerRequestDTO.getEmail()).orElse(null);
+
+        if (user == null) {
+            throw new IllegalArgumentException("The username already exists.");
+        }
+
+        if (!user.isVerifiedEmail()) {
+            throw new IllegalArgumentException("The email address is not verified.");
         }
 
         String encodedPassword = passwordEncoder.encode(registerRequestDTO.getPassword());
@@ -68,11 +82,13 @@ public class UsersService {
         departmentRepository.save(department);
 
 
-        Users user = Users.builder()
+        Users tempUser = Users.builder()
+                .id(user.getId())
                 .username(registerRequestDTO.getUserId())
                 .name(registerRequestDTO.getUsername())
                 .password(encodedPassword)
-                .email(registerRequestDTO.getEmail())
+                .email(user.getEmail())
+                .verifiedEmail(user.isVerifiedEmail())
                 .position(registerRequestDTO.getPosition())
                 .contact(registerRequestDTO.getContact())
                 .company(company)
@@ -80,7 +96,7 @@ public class UsersService {
                 .build();
 
 
-        return usersRepository.save(user);
+        return usersRepository.save(tempUser);
     }
 
     public String loginUser(LoginRequestDTO loginRequestDTO) {
@@ -102,5 +118,47 @@ public class UsersService {
     public Users getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return usersRepository.findByUsername(authentication.getName());
+    }
+
+    public Boolean checkUsername(String username) {
+        return usersRepository.existsByUsername(username);
+    }
+
+    public void initiateEmailRegistration(String email) {
+        // 1) 이메일 중복 확인
+        if (usersRepository.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("Email already in use.");
+        }
+
+        // 토큰 생성 (UUID 등)
+        String token = UUID.randomUUID().toString();
+        Users tempUser = Users.builder()
+                .email(email)
+                .verifiedEmail(false)
+                .verificationToken(token)
+                .build();
+
+        usersRepository.save(tempUser);
+
+        // 3) 이메일 전송
+        emailService.sendVerificationEmail(email, token);
+    }
+
+    public boolean verifyEmail(String token) {
+        // 토큰으로 사용자 찾기
+        Users user = usersRepository.findByVerificationToken(token).orElse(null);
+        if (user == null) {
+            return false;
+        }
+
+        Users tempUser = Users.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .verifiedEmail(true)
+                .verificationToken(null).build();
+
+        usersRepository.save(tempUser);
+
+        return true;
     }
 }

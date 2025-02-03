@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
 @Getter
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
@@ -14,23 +14,28 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String username;
-    @Column(nullable = false)
+    @Column
     @JsonIgnore
     private String password;
-    @Column(nullable = false)
+    @Column
     private String name;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
-    @Column(nullable = false)
+    @Column
     private String position;
-    @Column(nullable = false)
+    @Column
     private String contact;
+    @Column(nullable = false)
+    private boolean verifiedEmail;
+    @Column
+    private String verificationToken;
 
     @ManyToOne
     private Company company;
 
     @ManyToOne
     private Department department;
+
 }
