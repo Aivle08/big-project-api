@@ -32,11 +32,4 @@ public class Post {
     @Column
     private LocalDateTime updatedAt;
 
-    public Post(String title, String content, Users author) {
-        this.title = title;
-        this.content = content;
-        this.author = author;
-        this.createdAt = LocalDateTime.now();
-    }
-
 }
