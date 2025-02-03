@@ -30,7 +30,7 @@ public class EvaluationController {
             @ApiResponse(responseCode = "400", description = ""),
     })
     @GetMapping("applicant/{applicantId}")
-    public ResponseEntity<EvaluationResponseDTO> getScoresByApplicantId(@PathVariable Long recruitmentId,
+    public ResponseEntity<EvaluationResponseDTO> getScoresByApplicantIdAndRecruitmentId(@PathVariable Long recruitmentId,
                                                                         @PathVariable Long applicantId) {
         EvaluationResponseDTO scoresByApplicant = evaluationService.getScoresByApplicantIdandRecruitmentId(recruitmentId, applicantId);
         return ResponseEntity.ok(scoresByApplicant);
