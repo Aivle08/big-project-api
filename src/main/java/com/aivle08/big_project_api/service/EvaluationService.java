@@ -79,16 +79,16 @@ public class EvaluationService {
 
             for (EvaluationScore evaluationScore : applicant.getEvaluationScoreList()) {
                 scoreDetails.add(EvaluationDetailResponseDTO.builder()
-                        .score(evaluationScore.getScore())  // 평가 점수
-                        .summary(evaluationScore.getEvaluationDetail().getSummary())  // 평가 요약 (EvaluationDetail)
-                        .title(evaluationScore.getEvaluationDetail().getEvaluation().getDetail())  // 평가 제목 (Evaluation)
+                        .score(evaluationScore.getScore())
+                        .summary(evaluationScore.getEvaluationDetail().getSummary())
+                        .title(evaluationScore.getEvaluationDetail().getEvaluation().getDetail())
                         .build());
             }
 
             passList.add(EvaluationResponseDTO.builder()
-                    .recruitmentTitle(recruitmentTitle) // 채용 공고 제목
-                    .applicationName(applicant.getName()) // 지원자 이름
-                    .scoreDetails(scoreDetails) // 평가 점수 리스트
+                    .recruitmentTitle(recruitmentTitle)
+                    .applicationName(applicant.getName())
+                    .scoreDetails(scoreDetails)
                     .build());
         }
 
@@ -105,26 +105,45 @@ public class EvaluationService {
 
         List<Applicant> passedApplicants = applicantRepository.findByRecruitmentId(recruitmentId);
 
-        List<EvaluationResponseDTO> AllList = new ArrayList<>();
+        List<EvaluationResponseDTO> allList = new ArrayList<>();
         for (Applicant applicant : passedApplicants) {
             List<EvaluationDetailResponseDTO> scoreDetails = new ArrayList<>();
 
             for (EvaluationScore evaluationScore : applicant.getEvaluationScoreList()) {
                 scoreDetails.add(EvaluationDetailResponseDTO.builder()
-                        .score(evaluationScore.getScore())  // 평가 점수
-                        .summary(evaluationScore.getEvaluationDetail().getSummary())  // 평가 요약 (EvaluationDetail)
-                        .title(evaluationScore.getEvaluationDetail().getEvaluation().getDetail())  // 평가 제목 (Evaluation)
+                        .score(evaluationScore.getScore())
+                        .summary(evaluationScore.getEvaluationDetail().getSummary())
+                        .title(evaluationScore.getEvaluationDetail().getEvaluation().getDetail())
                         .build());
             }
 
-            AllList.add(EvaluationResponseDTO.builder()
-                    .recruitmentTitle(recruitmentTitle) // 채용 공고 제목
-                    .applicationName(applicant.getName()) // 지원자 이름
-                    .scoreDetails(scoreDetails) // 평가 점수 리스트
+            allList.add(EvaluationResponseDTO.builder()
+                    .recruitmentTitle(recruitmentTitle)
+                    .applicationName(applicant.getName())
+                    .scoreDetails(scoreDetails)
                     .build());
         }
 
-        return AllList;
+        return allList;
     }
 
+    public List<EvaluationScore> getEvaluationScore(List<EvaluationScore> evaluationScores, Long applicantId) {
+
+        Applicant applicant = applicantRepository.findById(applicantId)
+                .orElseThrow(() -> new IllegalArgumentException("지원자를 찾을 수 없습니다: " + applicantId));
+
+        for (EvaluationScore scoreDTO :evaluationScores) {
+
+            EvaluationScore evaluationScore = EvaluationScore.builder()
+                    .score(scoreDTO.getScore())
+                    .evaluationDetail(scoreDTO.getEvaluationDetail())
+                    .applicant(applicant)
+                    .build();
+
+            evaluationScoreRepository.save(evaluationScore);
+            evaluationScores.add(evaluationScore);
+        }
+
+        return evaluationScores;
+    }
 }
