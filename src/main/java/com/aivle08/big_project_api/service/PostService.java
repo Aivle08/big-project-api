@@ -61,14 +61,6 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 
-        if (post.getAuthor().getId().equals(usersService.getCurrentUser().getId())) {
-            post.updatePost(requestDto.getTitle(), requestDto.getContent());
-            Post updatedPost = postRepository.save(post);
-
-            return PostResponseDTO.fromEntity(updatedPost);
-        }
-        else throw new RuntimeException("해당 게시글에 접근할 수 없습니다.");
-
         Post updatedPost = Post.builder()
                 .id(post.getId())
                 .title(requestDto.getTitle())
@@ -89,7 +81,6 @@ public class PostService {
 
         if (post.getAuthor().getId().equals(usersService.getCurrentUser().getId())) {
             postRepository.deleteById(id);
-        }
-        else throw new RuntimeException("해당 게시글에 접근할 수 없습니다.");
+        } else throw new RuntimeException("해당 게시글에 접근할 수 없습니다.");
     }
 }
