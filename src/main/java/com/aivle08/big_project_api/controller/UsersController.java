@@ -75,12 +75,22 @@ public class UsersController {
     }
 
     @PostMapping("/initiate-email")
+    @Operation(summary = "인증 메일 발송")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "이메일 발송 성공"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
     public ResponseEntity<String> initiateEmail(@RequestParam String email) {
         usersService.initiateEmailRegistration(email);
         return ResponseEntity.ok("Please check your email to verify.");
     }
 
     @GetMapping("/verify-email")
+    @Operation(summary = "이메일 인증 코드 확인")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "이메일 인증 성공"),
+            @ApiResponse(responseCode = "400", description = "이메일 인증 실패")
+    })
     public ResponseEntity<String> verifyEmail(@RequestParam String token) {
         boolean success = usersService.verifyEmail(token);
         if (success) {

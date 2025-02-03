@@ -50,7 +50,7 @@ public class UsersService {
 
         Users user = usersRepository.findByEmail(registerRequestDTO.getEmail()).orElse(null);
 
-        if (user != null) {
+        if (user == null) {
             throw new IllegalArgumentException("The username already exists.");
         }
 
