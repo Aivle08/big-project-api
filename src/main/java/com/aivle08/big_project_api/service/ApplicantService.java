@@ -35,7 +35,7 @@ public class ApplicantService {
         List<Applicant> applicants = applicantRepository.findByRecruitmentId(recruitmentId);
 
         List<Long> applicantIds = applicants.stream()
-                .map(Applicant::getId) // Applicant의 id를 추출
+                .map(Applicant::getId)
                 .toList();
 
         return applicantIds;
