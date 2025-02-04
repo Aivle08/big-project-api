@@ -52,7 +52,8 @@ public class SecurityConfig {
                                 "/api/v1/recruitment/**",
                                 "/api/v1/posts/**",
                                 "/api/v1/users/initiate-email",
-                                "/api/v1/users/verify-email"
+                                "/api/v1/users/verify-email",
+                                "api/v1/test/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

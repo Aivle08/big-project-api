@@ -132,6 +132,7 @@ public class EvaluationService {
         Applicant applicant = applicantRepository.findById(applicantId)
                 .orElseThrow(() -> new IllegalArgumentException("지원자를 찾을 수 없습니다: " + applicantId));
 
+        List<EvaluationScore> newEvaluationScores = new ArrayList<>();
         for (EvaluationScore scoreDTO :evaluationScores) {
 
             EvaluationScore evaluationScore = EvaluationScore.builder()
@@ -141,9 +142,9 @@ public class EvaluationService {
                     .build();
 
             evaluationScoreRepository.save(evaluationScore);
-            evaluationScores.add(evaluationScore);
+            newEvaluationScores.add(evaluationScore);
         }
 
-        return evaluationScores;
+        return newEvaluationScores;
     }
 }
