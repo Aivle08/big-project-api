@@ -13,6 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class RecruitmentResponseDTO {
+
+    private Long id;
     private String title;
     private String job;
 
@@ -20,7 +22,11 @@ public class RecruitmentResponseDTO {
     private List<EvaluationRequestDTO> evaluationRequestDTOList;
 
     public static RecruitmentResponseDTO fromEntity(Recruitment recruitment) {
-        return new RecruitmentResponseDTO(recruitment.getTitle(), recruitment.getJob(),
-                recruitment.getEvaluationList().stream().map(EvaluationRequestDTO::fromEntity).toList());
+        return RecruitmentResponseDTO.builder()
+                .id(recruitment.getId())
+                .title(recruitment.getTitle())
+                .job(recruitment.getJob())
+                .evaluationRequestDTOList(recruitment.getEvaluationList().stream().map(EvaluationRequestDTO::fromEntity).toList())
+                .build();
     }
 }

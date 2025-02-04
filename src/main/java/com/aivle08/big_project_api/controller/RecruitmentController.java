@@ -40,9 +40,9 @@ public class RecruitmentController {
             @ApiResponse(responseCode = "200", description = "공고 리스트 저장 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<RecruitmentRequestDTO> postRecruitment(@RequestBody RecruitmentRequestDTO recruitmentRequestDTO) {
-        recruitmentService.createRecruitment(recruitmentRequestDTO);
+    public ResponseEntity<RecruitmentResponseDTO> postRecruitment(@RequestBody RecruitmentRequestDTO recruitmentRequestDTO) {
+        RecruitmentResponseDTO recruitmentResponseDTO = recruitmentService.createRecruitment(recruitmentRequestDTO);
         return ResponseEntity.ok()
-                .body(recruitmentRequestDTO);
+                .body(recruitmentResponseDTO);
     }
 }

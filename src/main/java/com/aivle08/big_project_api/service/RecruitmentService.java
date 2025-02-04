@@ -32,7 +32,7 @@ public class RecruitmentService {
     }
 
     @Transactional
-    public RecruitmentRequestDTO createRecruitment(RecruitmentRequestDTO recruitmentRequestDTO) {
+    public RecruitmentResponseDTO createRecruitment(RecruitmentRequestDTO recruitmentRequestDTO) {
         List<Evaluation> evaluations = recruitmentRequestDTO.getEvaluationRequestDTOList()
                 .stream().map(EvaluationRequestDTO::toEntity).toList();
 
@@ -58,7 +58,7 @@ public class RecruitmentService {
                 .toList();
         List<Evaluation> savedEvaluations = evaluationRepository.saveAll(evaluationList);
 
-        RecruitmentRequestDTO savedRecruitmentRequestDTO = RecruitmentRequestDTO.fromEntity(savedRecruitment);
-        return savedRecruitmentRequestDTO;
+        RecruitmentResponseDTO savedRecruitmentResponseDTO = RecruitmentResponseDTO.fromEntity(savedRecruitment);
+        return savedRecruitmentResponseDTO;
     }
 }
