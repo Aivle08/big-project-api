@@ -1,6 +1,7 @@
 package com.aivle08.big_project_api.service;
 
 import com.aivle08.big_project_api.dto.request.ApplicantRequestDTO;
+import com.aivle08.big_project_api.dto.response.ApplicantResponseDTO;
 import com.aivle08.big_project_api.model.Applicant;
 import com.aivle08.big_project_api.model.Recruitment;
 import com.aivle08.big_project_api.repository.ApplicantRepository;
@@ -24,11 +25,11 @@ public class ApplicantService {
         return applicantRepository.findAll();
     }
 
-    public List<ApplicantRequestDTO> getApplicantsByRecruitmentId(Long recruitmentId) {
+    public List<ApplicantResponseDTO> getApplicantsByRecruitmentId(Long recruitmentId) {
         List<Applicant> applicant = applicantRepository.findByRecruitmentId(recruitmentId);
 
-        List<ApplicantRequestDTO> applicantRequestDTOList = applicant.stream().map(ApplicantRequestDTO::fromEntity).toList();
-        return applicantRequestDTOList;
+        List<ApplicantResponseDTO> applicantResponseDTOList = applicant.stream().map(ApplicantResponseDTO::fromEntity).toList();
+        return applicantResponseDTOList;
     }
 
     public List<Long> getApplicantIDsByRecruitmentId(Long recruitmentId) {

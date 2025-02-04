@@ -1,6 +1,7 @@
 package com.aivle08.big_project_api.controller;
 
 import com.aivle08.big_project_api.dto.request.ApplicantRequestDTO;
+import com.aivle08.big_project_api.dto.response.ApplicantResponseDTO;
 import com.aivle08.big_project_api.dto.response.FileUploadResponseDTO;
 import com.aivle08.big_project_api.service.ApplicantService;
 import com.aivle08.big_project_api.service.FileStorageService;
@@ -34,8 +35,8 @@ public class ApplicantController {
             @ApiResponse(responseCode = "200", description = "지원자 리스트 조회 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<List<ApplicantRequestDTO>> getApplicantsByRecruitmentId(@PathVariable Long id) {
-        List<ApplicantRequestDTO> applicantsInputDTO = applicantService.getApplicantsByRecruitmentId(id);
+    public ResponseEntity<List<ApplicantResponseDTO>> getApplicantsByRecruitmentId(@PathVariable Long id) {
+        List<ApplicantResponseDTO> applicantsInputDTO = applicantService.getApplicantsByRecruitmentId(id);
 
         return ResponseEntity.ok().body(applicantsInputDTO);
     }
