@@ -22,7 +22,7 @@ public class TestController {
     public ResponseEntity<List<EvaluationScore>> saveEvaluationScores(
             @RequestBody List<EvaluationScore> evaluationScores,
             @PathVariable Long applicantId) {
-        List<EvaluationScore> savedScores = evaluationService.getEvaluationScore(evaluationScores, applicantId);
+        List<EvaluationScore> savedScores = evaluationService.createEvaluationScore(evaluationScores, applicantId);
         return ResponseEntity.ok(savedScores);
     }
 }

@@ -39,23 +39,24 @@ public class SecurityConfig {
 
                 .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/h2-console/**",
-                                "/api-docs",
-                                "/api/v3/**",
-                                "/swagger-ui/**",
-                                "/swagger-resources/**",
-                                "/api/v1/users/register",
-                                "/api/v1/users/login",
-                                "/api/v1/users/check-username",
-                                "/api/v1/applicant/**",
-                                "/api/v1/recruitment/**",
-                                "/api/v1/posts/**",
-                                "/api/v1/users/initiate-email",
-                                "/api/v1/users/verify-email",
-                                "api/v1/test/**"
-                        ).permitAll()
-                        .anyRequest().authenticated()
+                                .requestMatchers(
+//                                "/h2-console/**",
+//                                "/api-docs",
+//                                "/api/v3/**",
+//                                "/swagger-ui/**",
+//                                "/swagger-resources/**",
+//                                "/api/v1/users/register",
+//                                "/api/v1/users/login",
+//                                "/api/v1/users/check-username",
+//                                "/api/v1/applicant/**",
+//                                "/api/v1/recruitment/**",
+//                                "/api/v1/posts/**",
+//                                "/api/v1/users/initiate-email",
+//                                "/api/v1/users/verify-email",
+//                                "/api/v1/test/**"
+                                        "/**"
+                                ).permitAll()
+                                .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers(headersConfigurer -> headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));

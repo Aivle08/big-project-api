@@ -50,15 +50,9 @@ public class EvaluationService {
                 .stream()
                 .map(evaluationScore -> {
                     String summary = evaluationScore.getEvaluationDetail().getSummary();
-
-                    String item = evaluationScore.getEvaluationDetail()
-                            .getEvaluation()
-                            .getItem();
-
                     return EvaluationDetailResponseDTO.builder()
                             .score(evaluationScore.getScore())
                             .summary(summary)
-                            .title(item)
                             .build();
                 })
                 .toList();
@@ -86,7 +80,7 @@ public class EvaluationService {
                 scoreDetails.add(EvaluationDetailResponseDTO.builder()
                         .score(evaluationScore.getScore())
                         .summary(evaluationScore.getEvaluationDetail().getSummary())
-                        .title(evaluationScore.getEvaluationDetail().getEvaluation().getDetail())
+                        .title(evaluationScore.getEvaluation().getItem())
                         .build());
             }
 
@@ -118,7 +112,7 @@ public class EvaluationService {
                 scoreDetails.add(EvaluationDetailResponseDTO.builder()
                         .score(evaluationScore.getScore())
                         .summary(evaluationScore.getEvaluationDetail().getSummary())
-                        .title(evaluationScore.getEvaluationDetail().getEvaluation().getDetail())
+                        .title(evaluationScore.getEvaluation().getItem())
                         .build());
             }
 
@@ -132,8 +126,11 @@ public class EvaluationService {
         return allList;
     }
 
+    //todo: 1. EvaluationScore 서비스 따로 만들기
+    //todo: 2. 입력 받는 것 -> Evaluation id, EvaluationScore, EvaluationDetail
+    //todo: 3. 저장하세요!
     @Transactional
-    public List<EvaluationScore> getEvaluationScore(List<EvaluationScore> evaluationScores, Long applicantId) {
+    public List<EvaluationScore> createEvaluationScore(List<EvaluationScore> evaluationScores, Long applicantId) {
 
         Applicant applicant = applicantRepository.findById(applicantId)
                 .orElseThrow(() -> new IllegalArgumentException("지원자를 찾을 수 없습니다: " + applicantId));
@@ -141,7 +138,10 @@ public class EvaluationService {
         List<EvaluationScore> newEvaluationScores = new ArrayList<>();
         for (EvaluationScore scoreDTO : evaluationScores) {
 
-            EvaluationDetail evaluationDetail = scoreDTO.getEvaluationDetail();
+            EvaluationDetail evaluationDetail = EvaluationDetail.builder()
+                    .summary(scoreDTO.getEvaluationDetail().getSummary())
+                    .build();
+
             EvaluationDetail savedEvaluationDetail = evaluationDetailRepository.save(evaluationDetail);
 
             EvaluationScore evaluationScore = EvaluationScore.builder()

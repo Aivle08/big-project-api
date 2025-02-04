@@ -15,6 +15,10 @@ public class EvaluationScore {
     private Long id;
     private Integer score;
 
+    @ManyToOne
+    @JoinColumn(name = "evaluation_id")
+    private Evaluation evaluation;
+
     @OneToOne
     @JoinColumn(name = "evaluation_detail_id")
     private EvaluationDetail evaluationDetail;
