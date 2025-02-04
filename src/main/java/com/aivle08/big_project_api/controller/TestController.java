@@ -1,8 +1,9 @@
 package com.aivle08.big_project_api.controller;
 
 
+import com.aivle08.big_project_api.dto.request.EvaluationScoreRequestDTO;
 import com.aivle08.big_project_api.model.EvaluationScore;
-import com.aivle08.big_project_api.service.EvaluationService;
+import com.aivle08.big_project_api.service.EvaluationScoreService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,17 +13,17 @@ import java.util.List;
 @RequestMapping("/api/v1/test")
 public class TestController {
 
-    private final EvaluationService evaluationService;
+    private final EvaluationScoreService evaluationScoreService;
 
-    public TestController(EvaluationService evaluationService) {
-        this.evaluationService = evaluationService;
+    public TestController(EvaluationScoreService evaluationScoreService) {
+        this.evaluationScoreService = evaluationScoreService;
     }
 
     @PostMapping("/{applicantId}/scores")
     public ResponseEntity<List<EvaluationScore>> saveEvaluationScores(
-            @RequestBody List<EvaluationScore> evaluationScores,
+            @RequestBody List<EvaluationScoreRequestDTO> evaluationScores,
             @PathVariable Long applicantId) {
-        List<EvaluationScore> savedScores = evaluationService.createEvaluationScore(evaluationScores, applicantId);
+        List<EvaluationScore> savedScores = evaluationScoreService.createEvaluationScore(evaluationScores, applicantId);
         return ResponseEntity.ok(savedScores);
     }
 }
