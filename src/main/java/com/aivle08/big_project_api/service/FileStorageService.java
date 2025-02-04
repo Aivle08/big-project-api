@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,18 +29,25 @@ public class FileStorageService {
         }
     }
 
-    public List<String> storeFiles(List<MultipartFile> files) {
+    public List<String> storeFiles(List<MultipartFile> files, String id) {
         List<String> storedFiles = new ArrayList<>();
+        Path idDirectory = fileStorageLocation.resolve(id);
+
+        try {
+            Files.createDirectories(idDirectory);
+        } catch (IOException ex) {
+            throw new RuntimeException("Could not create directory for ID: " + id, ex);
+        }
 
         for (MultipartFile file : files) {
-            String fileName = storeFile(file);
+            String fileName = storeFile(file, idDirectory);
             storedFiles.add(fileName);
         }
 
         return storedFiles;
     }
 
-    private String storeFile(MultipartFile file) {
+    private String storeFile(MultipartFile file, Path idDirectory) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("File cannot be null or empty.");
         }
@@ -60,11 +68,27 @@ public class FileStorageService {
         }
 
         try {
-            Path targetLocation = this.fileStorageLocation.resolve(fileName);
+            Path targetLocation = idDirectory.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return fileName;
         } catch (IOException ex) {
             throw new RuntimeException("Could not store file: " + fileName, ex);
         }
+    }
+
+    public File getFile(String recruitmentId, String fileName) {
+        Path recruitmentDirectory = this.fileStorageLocation.resolve(recruitmentId);
+
+        File folder = recruitmentDirectory.toFile();
+        if (!folder.exists()) {
+            throw new RuntimeException("Recruitment folder does not exist");
+        }
+
+        File file = new File(recruitmentDirectory.toFile(), fileName);
+        if (!file.exists()) {
+            throw new RuntimeException("File not found for Recruitment ID: " + recruitmentId + " and file name: " + fileName);
+        }
+
+        return file;
     }
 }
