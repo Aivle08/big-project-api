@@ -19,7 +19,7 @@ public class EvaluationScore {
     @JoinColumn(name = "evaluation_id")
     private Evaluation evaluation;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "evaluation_detail_id")
     private EvaluationDetail evaluationDetail;
 

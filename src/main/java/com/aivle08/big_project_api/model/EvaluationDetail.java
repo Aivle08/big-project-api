@@ -14,6 +14,6 @@ public class EvaluationDetail {
     private Long id;
     private String summary;
 
-    @OneToOne
+    @OneToOne(mappedBy = "evaluationDetail")
     private EvaluationScore evaluationScore;
 }
