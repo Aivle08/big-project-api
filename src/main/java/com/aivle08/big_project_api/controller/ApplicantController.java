@@ -69,7 +69,7 @@ public class ApplicantController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        List<String> uploadedFileNames = fileStorageService.storeFiles(files);
+        List<String> uploadedFileNames = fileStorageService.storeFiles(files, id.toString());
         FileUploadResponseDTO response = new FileUploadResponseDTO(
                 "success",
                 uploadedFileNames.size() + " files uploaded successfully.",

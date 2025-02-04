@@ -28,18 +28,26 @@ public class FileStorageService {
         }
     }
 
-    public List<String> storeFiles(List<MultipartFile> files) {
+    public List<String> storeFiles(List<MultipartFile> files, String id) {
         List<String> storedFiles = new ArrayList<>();
+        Path idDirectory = fileStorageLocation.resolve(id);
+
+        try {
+            // Create the ID folder if it doesn't exist
+            Files.createDirectories(idDirectory);
+        } catch (IOException ex) {
+            throw new RuntimeException("Could not create directory for ID: " + id, ex);
+        }
 
         for (MultipartFile file : files) {
-            String fileName = storeFile(file);
+            String fileName = storeFile(file, idDirectory);
             storedFiles.add(fileName);
         }
 
         return storedFiles;
     }
 
-    private String storeFile(MultipartFile file) {
+    private String storeFile(MultipartFile file, Path idDirectory) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("File cannot be null or empty.");
         }
@@ -60,7 +68,7 @@ public class FileStorageService {
         }
 
         try {
-            Path targetLocation = this.fileStorageLocation.resolve(fileName);
+            Path targetLocation = idDirectory.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return fileName;
         } catch (IOException ex) {
