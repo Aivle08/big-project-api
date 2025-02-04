@@ -4,11 +4,14 @@ import com.aivle08.big_project_api.dto.response.EvaluationDetailResponseDTO;
 import com.aivle08.big_project_api.dto.response.EvaluationResponseDTO;
 import com.aivle08.big_project_api.dto.response.PassedApplicantResponseDTO;
 import com.aivle08.big_project_api.model.Applicant;
+import com.aivle08.big_project_api.model.EvaluationDetail;
 import com.aivle08.big_project_api.model.EvaluationScore;
 import com.aivle08.big_project_api.repository.ApplicantRepository;
+import com.aivle08.big_project_api.repository.EvaluationDetailRepository;
 import com.aivle08.big_project_api.repository.EvaluationScoreRepository;
 import com.aivle08.big_project_api.repository.RecruitmentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +23,14 @@ public class EvaluationService {
     private final ApplicantService applicantService;
     private final RecruitmentRepository recruitmentRepository;
     private final ApplicantRepository applicantRepository;
+    private final EvaluationDetailRepository evaluationDetailRepository;
 
-    public EvaluationService(EvaluationScoreRepository evaluationScoreRepository, ApplicantService applicantService, RecruitmentRepository recruitmentRepository, ApplicantRepository applicantRepository) {
+    public EvaluationService(EvaluationScoreRepository evaluationScoreRepository, ApplicantService applicantService, RecruitmentRepository recruitmentRepository, ApplicantRepository applicantRepository, EvaluationDetailRepository evaluationDetailRepository) {
         this.evaluationScoreRepository = evaluationScoreRepository;
         this.applicantService = applicantService;
         this.recruitmentRepository = recruitmentRepository;
         this.applicantRepository = applicantRepository;
+        this.evaluationDetailRepository = evaluationDetailRepository;
     }
 
     public EvaluationResponseDTO getScoresByApplicantIdandRecruitmentId(Long recruitmentId, Long applicantId) {
@@ -57,7 +62,7 @@ public class EvaluationService {
                             .build();
                 })
                 .toList();
-        
+
         return EvaluationResponseDTO.builder()
                 .recruitmentTitle(recruitmentTitle)
                 .applicationName(applicationName)
@@ -127,17 +132,21 @@ public class EvaluationService {
         return allList;
     }
 
+    @Transactional
     public List<EvaluationScore> getEvaluationScore(List<EvaluationScore> evaluationScores, Long applicantId) {
 
         Applicant applicant = applicantRepository.findById(applicantId)
                 .orElseThrow(() -> new IllegalArgumentException("지원자를 찾을 수 없습니다: " + applicantId));
 
         List<EvaluationScore> newEvaluationScores = new ArrayList<>();
-        for (EvaluationScore scoreDTO :evaluationScores) {
+        for (EvaluationScore scoreDTO : evaluationScores) {
+
+            EvaluationDetail evaluationDetail = scoreDTO.getEvaluationDetail();
+            EvaluationDetail savedEvaluationDetail = evaluationDetailRepository.save(evaluationDetail);
 
             EvaluationScore evaluationScore = EvaluationScore.builder()
                     .score(scoreDTO.getScore())
-                    .evaluationDetail(scoreDTO.getEvaluationDetail())
+                    .evaluationDetail(savedEvaluationDetail)
                     .applicant(applicant)
                     .build();
 
