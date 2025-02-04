@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,7 +34,6 @@ public class FileStorageService {
         Path idDirectory = fileStorageLocation.resolve(id);
 
         try {
-            // Create the ID folder if it doesn't exist
             Files.createDirectories(idDirectory);
         } catch (IOException ex) {
             throw new RuntimeException("Could not create directory for ID: " + id, ex);
@@ -74,5 +74,21 @@ public class FileStorageService {
         } catch (IOException ex) {
             throw new RuntimeException("Could not store file: " + fileName, ex);
         }
+    }
+
+    public File getFile(String recruitmentId, String fileName) {
+        Path recruitmentDirectory = this.fileStorageLocation.resolve(recruitmentId);
+
+        File folder = recruitmentDirectory.toFile();
+        if (!folder.exists()) {
+            throw new RuntimeException("Recruitment folder does not exist");
+        }
+
+        File file = new File(recruitmentDirectory.toFile(), fileName);
+        if (!file.exists()) {
+            throw new RuntimeException("File not found for Recruitment ID: " + recruitmentId + " and file name: " + fileName);
+        }
+
+        return file;
     }
 }

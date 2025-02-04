@@ -8,11 +8,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 // TODO: 예외처리 추가 및 반환 값 지정
@@ -78,4 +82,28 @@ public class ApplicantController {
         return ResponseEntity.ok()
                 .body(response);
     }
+
+    @Operation(summary = "파일 다운로드", description = "리쿠르먼트 ID와 파일 이름으로 파일을 다운로드합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "파일 다운로드 성공"),
+            @ApiResponse(responseCode = "400", description = "파일을 찾을 수 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류 발생")
+    })
+    @GetMapping(value = "/applicant/file/{fileName}")
+//    @GetMapping(value = "/applicant/{applicantId}/resume-pdf")
+    public ResponseEntity<?> getFile(@PathVariable Long id, @PathVariable String fileName) {
+        try {
+            File file = fileStorageService.getFile(id.toString(), fileName);
+
+            byte[] fileContent = Files.readAllBytes(file.toPath());
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName())
+                    .body(fileContent);
+        } catch (IOException ex) {
+            return ResponseEntity.status(500).body("Failed to read file: " + ex.getMessage());
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(400).body("Error: " + ex.getMessage());
+        }
+    }
+
 }
