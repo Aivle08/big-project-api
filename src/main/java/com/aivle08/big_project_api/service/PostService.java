@@ -16,17 +16,18 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UsersService usersService;
+    private final CommentService commentService;
 
-    public PostService(PostRepository postRepository, UsersService usersService) {
+    public PostService(PostRepository postRepository, UsersService usersService, CommentService commentService) {
         this.postRepository = postRepository;
         this.usersService = usersService;
+        this.commentService = commentService;
     }
 
     public PostResponseDTO createPost(PostRequestDTO postRequestDTO) {
         Users author = usersService.getCurrentUser();
 
         Post createdPost = Post.builder()
-
                 .title(postRequestDTO.getTitle())
                 .content(postRequestDTO.getContent())
                 .author(author)
