@@ -4,14 +4,11 @@ import com.aivle08.big_project_api.dto.response.EvaluationDetailResponseDTO;
 import com.aivle08.big_project_api.dto.response.EvaluationResponseDTO;
 import com.aivle08.big_project_api.dto.response.PassedApplicantResponseDTO;
 import com.aivle08.big_project_api.model.Applicant;
-import com.aivle08.big_project_api.model.EvaluationDetail;
 import com.aivle08.big_project_api.model.EvaluationScore;
 import com.aivle08.big_project_api.repository.ApplicantRepository;
-import com.aivle08.big_project_api.repository.EvaluationDetailRepository;
 import com.aivle08.big_project_api.repository.EvaluationScoreRepository;
 import com.aivle08.big_project_api.repository.RecruitmentRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,21 +20,20 @@ public class EvaluationService {
     private final ApplicantService applicantService;
     private final RecruitmentRepository recruitmentRepository;
     private final ApplicantRepository applicantRepository;
-    private final EvaluationDetailRepository evaluationDetailRepository;
 
-    public EvaluationService(EvaluationScoreRepository evaluationScoreRepository, ApplicantService applicantService, RecruitmentRepository recruitmentRepository, ApplicantRepository applicantRepository, EvaluationDetailRepository evaluationDetailRepository) {
+    public EvaluationService(EvaluationScoreRepository evaluationScoreRepository, ApplicantService applicantService, RecruitmentRepository recruitmentRepository, ApplicantRepository applicantRepository) {
         this.evaluationScoreRepository = evaluationScoreRepository;
         this.applicantService = applicantService;
         this.recruitmentRepository = recruitmentRepository;
         this.applicantRepository = applicantRepository;
-        this.evaluationDetailRepository = evaluationDetailRepository;
     }
 
-    public EvaluationResponseDTO getScoresByApplicantIdandRecruitmentId(Long recruitmentId, Long applicantId) {
+    public EvaluationResponseDTO getScoresByApplicantIdAndRecruitmentId(Long recruitmentId, Long applicantId) {
+
         String recruitmentTitle = recruitmentRepository.findById(recruitmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid recruitmentId")).getTitle();
 
-        List<Long> applicantIds = applicantService.getApplicantIDsByRecruitmentId(recruitmentId);
+        List<Long> applicantIds = applicantService.getApplicantIdListByRecruitmentId(recruitmentId);
 
         if (!applicantIds.contains(applicantId)) {
             throw new IllegalArgumentException("ApplicantId가 없습니다.");
@@ -64,7 +60,7 @@ public class EvaluationService {
                 .build();
     }
 
-    public PassedApplicantResponseDTO getPassedApplicants(Long recruitmentId) {
+    public PassedApplicantResponseDTO getPassedApplicantList(Long recruitmentId) {
 
         String recruitmentTitle = recruitmentRepository.findById(recruitmentId)
                 .map(r -> r.getTitle())
@@ -97,7 +93,7 @@ public class EvaluationService {
                 .build();
     }
 
-    public List<EvaluationResponseDTO> getAllApplicantEvaluations(Long recruitmentId) {
+    public List<EvaluationResponseDTO> getApplicantEvaluationList(Long recruitmentId) {
 
         String recruitmentTitle = recruitmentRepository.findById(recruitmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid recruitmentId")).getTitle();

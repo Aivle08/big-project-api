@@ -20,10 +20,10 @@ public class TestController {
     }
 
     @PostMapping("/{applicantId}/scores")
-    public ResponseEntity<List<EvaluationScore>> saveEvaluationScores(
+    public ResponseEntity<List<EvaluationScore>> createEvaluationScoreList(
             @RequestBody List<EvaluationScoreRequestDTO> evaluationScores,
             @PathVariable Long applicantId) {
-        List<EvaluationScore> savedScores = evaluationScoreService.createEvaluationScore(evaluationScores, applicantId);
+        List<EvaluationScore> savedScores = evaluationScoreService.createEvaluationScoreList(evaluationScores, applicantId);
         return ResponseEntity.ok(savedScores);
     }
 }

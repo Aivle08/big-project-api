@@ -1,7 +1,6 @@
 package com.aivle08.big_project_api.controller;
 
 import com.aivle08.big_project_api.dto.response.EvaluationResponseDTO;
-import com.aivle08.big_project_api.service.ApplicantService;
 import com.aivle08.big_project_api.service.EvaluationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -16,11 +15,9 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Evaluation API", description = "평가 조회 API")
 public class EvaluationController {
 
-    private final ApplicantService applicantService;
     private final EvaluationService evaluationService;
 
-    public EvaluationController(ApplicantService applicantService, EvaluationService evaluationService) {
-        this.applicantService = applicantService;
+    public EvaluationController(EvaluationService evaluationService) {
         this.evaluationService = evaluationService;
     }
 
@@ -31,8 +28,8 @@ public class EvaluationController {
     })
     @GetMapping("applicant/{applicantId}")
     public ResponseEntity<EvaluationResponseDTO> getScoresByApplicantIdAndRecruitmentId(@PathVariable Long recruitmentId,
-                                                                        @PathVariable Long applicantId) {
-        EvaluationResponseDTO scoresByApplicant = evaluationService.getScoresByApplicantIdandRecruitmentId(recruitmentId, applicantId);
+                                                                                        @PathVariable Long applicantId) {
+        EvaluationResponseDTO scoresByApplicant = evaluationService.getScoresByApplicantIdAndRecruitmentId(recruitmentId, applicantId);
         return ResponseEntity.ok(scoresByApplicant);
     }
 
@@ -42,13 +39,17 @@ public class EvaluationController {
             @ApiResponse(responseCode = "400", description = ""),
     })
     @GetMapping("/applicants")
-    public ResponseEntity<?> getEvaluations(@PathVariable Long recruitmentId,
-                                            @RequestParam(name = "passed", defaultValue = "false") boolean passed) {
+    public ResponseEntity<?> getEvaluationList(@PathVariable Long recruitmentId,
+                                               @RequestParam(name = "passed", defaultValue = "false") boolean passed) {
         if (passed) {
-            return ResponseEntity.ok(evaluationService.getPassedApplicants(recruitmentId));
+            return ResponseEntity.ok(evaluationService.getPassedApplicantList(recruitmentId));
         }
         else {
-            return ResponseEntity.ok(evaluationService.getAllApplicantEvaluations(recruitmentId));
+            return ResponseEntity.ok(evaluationService.getApplicantEvaluationList(recruitmentId));
         }
     }
+
+
+
+
 }

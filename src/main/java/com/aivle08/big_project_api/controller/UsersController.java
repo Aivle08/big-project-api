@@ -29,7 +29,7 @@ public class UsersController {
             @ApiResponse(responseCode = "201", description = "회원가입 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<String> register(@RequestBody RegisterRequestDTO registerRequestDTO) {
+    public ResponseEntity<String> registerUser(@RequestBody RegisterRequestDTO registerRequestDTO) {
         usersService.registerUser(registerRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }
@@ -99,5 +99,4 @@ public class UsersController {
             return ResponseEntity.badRequest().body("Invalid token.");
         }
     }
-
 }

@@ -40,7 +40,7 @@ public class PostService {
     }
 
 
-    public List<PostResponseDTO> getPostsByCompany() {
+    public List<PostResponseDTO> getPostListByCompany() {
 
         List<Post> posts = postRepository.findByAuthor_Company(usersService.getCurrentUser().getCompany());
 

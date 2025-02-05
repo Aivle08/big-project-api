@@ -39,10 +39,10 @@ public class ApplicantController {
             @ApiResponse(responseCode = "200", description = "지원자 리스트 조회 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<List<ApplicantResponseDTO>> getApplicantsByRecruitmentId(@PathVariable Long id) {
-        List<ApplicantResponseDTO> applicantsInputDTO = applicantService.getApplicantsByRecruitmentId(id);
+    public ResponseEntity<List<ApplicantResponseDTO>> getApplicantListByRecruitmentId(@PathVariable Long id) {
+        List<ApplicantResponseDTO> applicantListInputDTO = applicantService.getApplicantListByRecruitmentId(id);
 
-        return ResponseEntity.ok().body(applicantsInputDTO);
+        return ResponseEntity.ok().body(applicantListInputDTO);
     }
 
     @PostMapping
@@ -51,8 +51,8 @@ public class ApplicantController {
             @ApiResponse(responseCode = "200", description = "지원자 리스트 저장 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<ApplicantRequestDTO> postRecruitment(@RequestBody ApplicantRequestDTO applicantRequestDTO, @PathVariable Long id) {
-        applicantService.applicantCreate(applicantRequestDTO, id);
+    public ResponseEntity<ApplicantRequestDTO> createRecruitment(@RequestBody ApplicantRequestDTO applicantRequestDTO, @PathVariable Long id) {
+        applicantService.createApplicant(applicantRequestDTO, id);
         return ResponseEntity.ok()
                 .body(applicantRequestDTO);
     }

@@ -29,7 +29,7 @@ public class RecruitmentController {
             @ApiResponse(responseCode = "200", description = "공고 리스트 조회 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<List<RecruitmentResponseDTO>> getRecruitments() {
+    public ResponseEntity<List<RecruitmentResponseDTO>> getRecruitmentList() {
         return ResponseEntity.ok()
                 .body(recruitmentService.findAllRecruitment());
     }
@@ -40,7 +40,7 @@ public class RecruitmentController {
             @ApiResponse(responseCode = "200", description = "공고 리스트 저장 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<RecruitmentResponseDTO> postRecruitment(@RequestBody RecruitmentRequestDTO recruitmentRequestDTO) {
+    public ResponseEntity<RecruitmentResponseDTO> createRecruitment(@RequestBody RecruitmentRequestDTO recruitmentRequestDTO) {
         RecruitmentResponseDTO recruitmentResponseDTO = recruitmentService.createRecruitment(recruitmentRequestDTO);
         return ResponseEntity.ok()
                 .body(recruitmentResponseDTO);

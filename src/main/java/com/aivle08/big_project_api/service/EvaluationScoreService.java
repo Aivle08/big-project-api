@@ -30,16 +30,11 @@ public class EvaluationScoreService {
         this.evaluationRepository = evaluationRepository;
     }
 
-    //todo: 1. EvaluationScore 서비스 따로 만들기
-    //todo: 2. 입력 받는 것 -> Evaluation id, EvaluationScore, EvaluationDetail
-    //todo: 3. 저장하세요!
     @Transactional
-    public List<EvaluationScore> createEvaluationScore(List<EvaluationScoreRequestDTO> evaluationScores, Long applicantId) {
+    public List<EvaluationScore> createEvaluationScoreList(List<EvaluationScoreRequestDTO> evaluationScores, Long applicantId) {
 
         Applicant applicant = applicantRepository.findById(applicantId)
                 .orElseThrow(() -> new IllegalArgumentException("지원자를 찾을 수 없습니다: " + applicantId));
-
-
 
         List<EvaluationScore> newEvaluationScores = new ArrayList<>();
         for (EvaluationScoreRequestDTO scoreDTO : evaluationScores) {
