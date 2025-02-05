@@ -1,6 +1,7 @@
 package com.aivle08.big_project_api.service;
 
 import com.aivle08.big_project_api.dto.request.CommentRequestDTO;
+import com.aivle08.big_project_api.dto.response.CommentResponseDTO;
 import com.aivle08.big_project_api.model.Comment;
 import com.aivle08.big_project_api.model.Users;
 import com.aivle08.big_project_api.repository.CommentRepository;
@@ -24,7 +25,7 @@ public class CommentService {
         this.postRepository = postRepository;
     }
 
-    public Comment createComment(Long id, CommentRequestDTO commentDTO) {
+    public CommentResponseDTO createComment(Long id, CommentRequestDTO commentDTO) {
 
         Users user = usersService.getCurrentUser();
 
@@ -36,10 +37,12 @@ public class CommentService {
                 .post(postRepository.findById(id).get())
                 .build();
 
-        return commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
+
+        return CommentResponseDTO.fromEntity(savedComment);
     }
 
-    public Comment updateComment(Long id, CommentRequestDTO commentDTO) {
+    public CommentResponseDTO updateComment(Long id, CommentRequestDTO commentDTO) {
 
         Comment commentById = commentRepository.findById(id).get();
 
@@ -51,13 +54,13 @@ public class CommentService {
                 .createdAt(commentById.getCreatedAt())
                 .build();
 
-        return  commentRepository.save(updateComment);
+        Comment saveUpdateComment = commentRepository.save(updateComment);
+
+        return  CommentResponseDTO.fromEntity(saveUpdateComment);
     }
 
-    public Comment deleteComment(Long id) {
-        Comment commentById = commentRepository.findById(id).get();
-        commentRepository.delete(commentById);
-        return commentById;
+    public void deleteComment(Long id) {
+        commentRepository.deleteById(id);
     }
 
 }

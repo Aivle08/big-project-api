@@ -29,7 +29,7 @@ public class EvaluationController {
 
     @Operation(summary = "지원자 평가조회")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = ""),
+            @ApiResponse(responseCode = "200", description = "지원자 평가조회 성공"),
             @ApiResponse(responseCode = "400", description = ""),
     })
     @GetMapping("applicant/{applicantId}")
@@ -41,7 +41,7 @@ public class EvaluationController {
 
     @Operation(summary = "모든 지원자 평가조회", description = "true = 합격자 지원자 평가 조회, false = 전체 지원자 평가 조회")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = ""),
+            @ApiResponse(responseCode = "200", description = "모든 지원자 평가조회 성공"),
             @ApiResponse(responseCode = "400", description = ""),
     })
     @GetMapping("/applicants")
@@ -55,6 +55,11 @@ public class EvaluationController {
         }
     }
 
+    @Operation(summary = "합격자 리스트 저장", description = "합격자 id를 리스트로 저장")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "합격자 리스트 저장 성공"),
+            @ApiResponse(responseCode = "400", description = ""),
+    })
     @PostMapping("/applicants/pass")
     public ResponseEntity<List<ApplicantRequestDTO>> getPassedApplicantById(@RequestBody List<Long> applicantIdList, @PathVariable Long recruitmentId) {
 
