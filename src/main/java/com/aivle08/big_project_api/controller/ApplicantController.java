@@ -5,6 +5,7 @@ import com.aivle08.big_project_api.dto.response.ApplicantResponseDTO;
 import com.aivle08.big_project_api.dto.response.FileUploadResponseDTO;
 import com.aivle08.big_project_api.service.ApplicantService;
 import com.aivle08.big_project_api.service.FileStorageService;
+import com.aivle08.big_project_api.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -27,10 +28,12 @@ import java.util.List;
 public class ApplicantController {
     private final ApplicantService applicantService;
     private final FileStorageService fileStorageService;
+    private final S3Service s3Service;
 
-    public ApplicantController(ApplicantService applicantService, FileStorageService fileStorageService) {
+    public ApplicantController(ApplicantService applicantService, FileStorageService fileStorageService, S3Service s3Service) {
         this.applicantService = applicantService;
         this.fileStorageService = fileStorageService;
+        this.s3Service = s3Service;
     }
 
     @GetMapping("/applicant")
@@ -105,6 +108,59 @@ public class ApplicantController {
         } catch (RuntimeException ex) {
             return ResponseEntity.status(400).body("Error: " + ex.getMessage());
         }
+    }
+
+    @Operation(summary = "PDF 파일 업로드", description = "지원자의 PDF 파일을 S3 버킷에 업로드합니다. 파일명은 '공고ID_지원자ID.pdf' 형식으로 변경됩니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "파일 업로드 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 파일 형식 또는 파일이 없을 때"),
+            @ApiResponse(responseCode = "500", description = "서버 오류 발생")
+    })
+    @PostMapping(value = "/applicant/{applicantId}/upload-resume-pdf", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<FileUploadResponseDTO> uploadResumePDF(
+            @PathVariable Long id,
+            @PathVariable Long applicantId,
+            @RequestPart("files") List<MultipartFile> files) {
+
+        // 파일이 없으면 400 Bad Request 반환
+        if (files == null || files.isEmpty()) {
+            FileUploadResponseDTO response = new FileUploadResponseDTO(
+                    "badRequest",
+                    "No files uploaded.",
+                    null
+            );
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // 여러 파일이 들어오더라도 여기서는 첫 번째 파일만 업로드하는 예시입니다.
+        MultipartFile file = files.get(0);
+
+        // 파일 확장자 체크 (pdf만 허용)
+        if (!file.getOriginalFilename().toLowerCase().endsWith(".pdf")) {
+            FileUploadResponseDTO response = new FileUploadResponseDTO(
+                    "badRequest",
+                    "Only PDF files are allowed.",
+                    null
+            );
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // 새로운 파일명: recruitmentId_applicantId.pdf
+        String newFileName = id + "_" + applicantId + ".pdf";
+
+        // S3에 파일 업로드
+        String s3Url = s3Service.uploadFile(file, newFileName);
+
+        // 응답 DTO 생성 (파일 업로드 결과 및 URL)
+        FileUploadResponseDTO response = new FileUploadResponseDTO(
+                "success",
+                "File uploaded successfully.",
+                List.of(s3Url)
+        );
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(response);
     }
 
 }
