@@ -1,5 +1,6 @@
 package com.aivle08.big_project_api.service;
 
+import com.aivle08.big_project_api.dto.request.ApplicantRequestDTO;
 import com.aivle08.big_project_api.dto.response.EvaluationDetailResponseDTO;
 import com.aivle08.big_project_api.dto.response.EvaluationResponseDTO;
 import com.aivle08.big_project_api.dto.response.PassedApplicantResponseDTO;
@@ -8,10 +9,12 @@ import com.aivle08.big_project_api.model.EvaluationScore;
 import com.aivle08.big_project_api.repository.ApplicantRepository;
 import com.aivle08.big_project_api.repository.EvaluationScoreRepository;
 import com.aivle08.big_project_api.repository.RecruitmentRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EvaluationService {
@@ -120,5 +123,23 @@ public class EvaluationService {
         }
 
         return allList;
+    }
+
+    @Transactional
+    public List<ApplicantRequestDTO> getPassApplicantById(List<Long> applicantIdList) {
+
+        for (Long applicantId : applicantIdList) {
+            int updatedCount = applicantRepository.updateResumeResultToPassed(applicantId);
+
+            if (updatedCount == 0) {
+                throw new IllegalArgumentException("지원자 ID " + applicantId + "가 존재하지 않거나 이미 합격 처리되었습니다.");
+            }
+        }
+
+        List<Applicant> updatedApplicants = applicantRepository.findAllById(applicantIdList);
+
+        return updatedApplicants.stream()
+                .map(ApplicantRequestDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 }

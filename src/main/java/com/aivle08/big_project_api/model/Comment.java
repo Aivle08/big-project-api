@@ -1,31 +1,28 @@
 package com.aivle08.big_project_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Post {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String content;
-
     @ManyToOne
-    @JoinColumn(name = "author_id")
-    private Users author;
+    @JsonIgnore
+    @JoinColumn(name = "users_id", nullable = false)
+    private Users user;
+
+    private String content;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -33,7 +30,8 @@ public class Post {
     @Column
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
-
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    @JsonIgnore
+    private Post post;
 }
