@@ -76,8 +76,7 @@ public class ApplicantController {
             );
             return ResponseEntity.badRequest().body(response);
         }
-
-        List<String> uploadedFileNames = fileStorageService.storeFiles(files, id.toString());
+        List<String> uploadedFileNames = s3Service.storeFiles(files, id);
         FileUploadResponseDTO response = new FileUploadResponseDTO(
                 "success",
                 uploadedFileNames.size() + " files uploaded successfully.",
@@ -135,21 +134,23 @@ public class ApplicantController {
         // 여러 파일이 들어오더라도 여기서는 첫 번째 파일만 업로드하는 예시입니다.
         MultipartFile file = files.get(0);
 
-        // 파일 확장자 체크 (pdf만 허용)
-        if (!file.getOriginalFilename().toLowerCase().endsWith(".pdf")) {
-            FileUploadResponseDTO response = new FileUploadResponseDTO(
-                    "badRequest",
-                    "Only PDF files are allowed.",
-                    null
-            );
-            return ResponseEntity.badRequest().body(response);
-        }
+        String s3Url = s3Service.uploadOneFile(file, id);
 
-        // 새로운 파일명: recruitmentId_applicantId.pdf
-        String newFileName = id + "_" + applicantId + ".pdf";
-
-        // S3에 파일 업로드
-        String s3Url = s3Service.uploadFile(file, newFileName);
+//        // 파일 확장자 체크 (pdf만 허용)
+//        if (!file.getOriginalFilename().toLowerCase().endsWith(".pdf")) {
+//            FileUploadResponseDTO response = new FileUploadResponseDTO(
+//                    "badRequest",
+//                    "Only PDF files are allowed.",
+//                    null
+//            );
+//            return ResponseEntity.badRequest().body(response);
+//        }
+//
+//        // 새로운 파일명: recruitmentId_applicantId.pdf
+//        String newFileName = id + "_" + applicantId + ".pdf";
+//
+//        // S3에 파일 업로드
+//        String s3Url = s3Service.uploadFile(file, newFileName);
 
         // 응답 DTO 생성 (파일 업로드 결과 및 URL)
         FileUploadResponseDTO response = new FileUploadResponseDTO(

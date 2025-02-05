@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class S3Service {
@@ -74,5 +76,16 @@ public class S3Service {
         applicantRepository.save(applicantWithFile);
 
         return s3Url;
+    }
+
+    public List<String> storeFiles(List<MultipartFile> files, Long id) {
+        List<String> storedFiles = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            String fileName = this.uploadOneFile(file, id);
+            storedFiles.add(fileName);
+        }
+
+        return storedFiles;
     }
 }
