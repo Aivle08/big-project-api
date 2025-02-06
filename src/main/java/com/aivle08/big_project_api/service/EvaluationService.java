@@ -31,7 +31,7 @@ public class EvaluationService {
         this.applicantRepository = applicantRepository;
     }
 
-    public EvaluationResponseDTO getScoresByApplicantIdAndRecruitmentId(Long recruitmentId, Long applicantId) {
+    public EvaluationResponseDTO getScoreListByApplicantIdAndRecruitmentId(Long recruitmentId, Long applicantId) {
 
         String recruitmentTitle = recruitmentRepository.findById(recruitmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid recruitmentId")).getTitle();

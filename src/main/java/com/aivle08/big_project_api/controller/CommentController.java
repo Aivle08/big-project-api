@@ -41,7 +41,7 @@ public class CommentController {
             @ApiResponse(responseCode = "200", description = "댓글 저장 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<CommentResponseDTO> postComment(@PathVariable long id, @RequestBody CommentRequestDTO commentRequestDTO) {
+    public ResponseEntity<CommentResponseDTO> createComment(@PathVariable long id, @RequestBody CommentRequestDTO commentRequestDTO) {
         CommentResponseDTO commentResponseDTO = commentService.createComment(id, commentRequestDTO);
         return ResponseEntity.ok(commentResponseDTO);
     }

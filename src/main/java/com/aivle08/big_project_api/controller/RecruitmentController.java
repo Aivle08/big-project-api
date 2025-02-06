@@ -31,7 +31,7 @@ public class RecruitmentController {
     })
     public ResponseEntity<List<RecruitmentResponseDTO>> getRecruitmentList() {
         return ResponseEntity.ok()
-                .body(recruitmentService.findAllRecruitment());
+                .body(recruitmentService.getRecruitmentList());
     }
 
     @PostMapping

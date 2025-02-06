@@ -26,7 +26,7 @@ public class RecruitmentService {
         this.usersService = usersService;
     }
 
-    public List<RecruitmentResponseDTO> findAllRecruitment() {
+    public List<RecruitmentResponseDTO> getRecruitmentList() {
         return recruitmentRepository.findAllByDepartment(usersService.getCurrentUser().getDepartment())
                 .stream().map(RecruitmentResponseDTO::fromEntity).toList();
     }
