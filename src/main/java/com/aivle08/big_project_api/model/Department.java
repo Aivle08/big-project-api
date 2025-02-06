@@ -29,9 +29,4 @@ public class Department {
     @OneToMany
     @JoinColumn(name = "department_id")
     private List<Recruitment> recruitmentList;
-
-    @OneToMany
-    @JoinColumn(name = "department_id")
-    private List<Applicant> applicantList;
-
 }
