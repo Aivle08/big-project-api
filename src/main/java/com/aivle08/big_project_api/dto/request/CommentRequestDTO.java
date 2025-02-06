@@ -8,13 +8,12 @@ import lombok.Getter;
 @Getter
 @Builder
 public class CommentRequestDTO {
-    private Long id;
+
     private String content;
 
 
     public static CommentRequestDTO fromEntity(Comment comment) {
         return CommentRequestDTO.builder()
-                .id(comment.getId())
                 .content(comment.getContent())
                 .build();
     }

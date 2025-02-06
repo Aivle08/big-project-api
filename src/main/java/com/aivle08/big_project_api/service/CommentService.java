@@ -25,6 +25,11 @@ public class CommentService {
         this.postRepository = postRepository;
     }
 
+    public CommentResponseDTO getComment(Long id) {
+        Comment comment = commentRepository.findById(id).orElse(null);
+        return CommentResponseDTO.fromEntity(comment);
+    }
+
     public CommentResponseDTO createComment(Long id, CommentRequestDTO commentDTO) {
 
         Users user = usersService.getCurrentUser();
@@ -52,6 +57,7 @@ public class CommentService {
                 .user(commentById.getUser())
                 .updatedAt(LocalDateTime.now())
                 .createdAt(commentById.getCreatedAt())
+                .post(commentById.getPost())
                 .build();
 
         Comment saveUpdateComment = commentRepository.save(updateComment);
