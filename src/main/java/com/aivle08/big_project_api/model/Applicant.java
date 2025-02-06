@@ -20,6 +20,7 @@ public class Applicant {
     private String contact;
     private String fileName;
     private Boolean resumeResult;
+    @Column(columnDefinition = "TEXT")
     private String resumeSummary;
 
     @OneToMany
