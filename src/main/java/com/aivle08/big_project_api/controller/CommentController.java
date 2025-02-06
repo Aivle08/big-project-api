@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/post/{id}/comment")
 @Tag(name = "Comment API", description = "댓글 crud API")
@@ -23,15 +25,15 @@ public class CommentController {
         this.apiService = apiService;
     }
 
-    @GetMapping("/{comment-id}")
+    @GetMapping
     @Operation(summary = "댓글 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "댓글 조회 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<CommentResponseDTO> getComment(@PathVariable(name = "comment-id") Long commentId){
-        CommentResponseDTO commentResponseDTO = commentService.getComment(commentId);
-        return ResponseEntity.ok(commentResponseDTO);
+    public ResponseEntity<List<CommentResponseDTO>> getComment(@PathVariable Long id){
+        List<CommentResponseDTO> commentResponseDTOList = commentService.getCommentList(id);
+        return ResponseEntity.ok(commentResponseDTOList);
     }
 
 

@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -69,4 +72,10 @@ public class CommentService {
         commentRepository.deleteById(id);
     }
 
+    public List<CommentResponseDTO> getCommentList(Long id) {
+        List<Comment> commentList = commentRepository.findAllByPost_id(id);
+        List<CommentResponseDTO> commentResponseDTOList = commentList.stream().map(CommentResponseDTO::fromEntity).collect(Collectors.toList());
+
+        return commentResponseDTOList;
+    }
 }
