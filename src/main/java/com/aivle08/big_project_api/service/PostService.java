@@ -69,6 +69,7 @@ public class PostService {
                 .author(post.getAuthor())
                 .updatedAt(LocalDateTime.now())
                 .createdAt(post.getCreatedAt())
+                .comments(post.getComments())
                 .build();
 
         Post savedPost = postRepository.save(updatedPost);
