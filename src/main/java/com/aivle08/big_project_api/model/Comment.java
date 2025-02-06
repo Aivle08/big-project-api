@@ -4,29 +4,34 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Table(
-        name = "department",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"company_id", "name"})
-)
-public class Department {
+public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
-    private String name;
 
     @ManyToOne
     @JsonIgnore
-    private Company company;
+    @JoinColumn(name = "users_id", nullable = false)
+    private Users user;
 
-    @OneToMany
-    @JoinColumn(name = "department_id")
-    private List<Recruitment> recruitmentList;
+    private String content;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column
+    private LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    @JsonIgnore
+    private Post post;
 }

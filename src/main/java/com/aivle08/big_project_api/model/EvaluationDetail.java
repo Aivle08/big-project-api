@@ -14,8 +14,6 @@ public class EvaluationDetail {
     private Long id;
     private String summary;
 
-    @ManyToOne
-    @JoinColumn(name = "evaluation_id")
-    private Evaluation evaluation;
-
+    @OneToOne(mappedBy = "evaluationDetail")
+    private EvaluationScore evaluationScore;
 }

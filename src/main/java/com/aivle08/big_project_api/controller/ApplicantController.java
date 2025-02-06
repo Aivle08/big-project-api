@@ -1,9 +1,10 @@
 package com.aivle08.big_project_api.controller;
 
 import com.aivle08.big_project_api.dto.request.ApplicantRequestDTO;
+import com.aivle08.big_project_api.dto.response.ApplicantResponseDTO;
 import com.aivle08.big_project_api.dto.response.FileUploadResponseDTO;
 import com.aivle08.big_project_api.service.ApplicantService;
-import com.aivle08.big_project_api.service.FileStorageService;
+import com.aivle08.big_project_api.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -21,11 +22,11 @@ import java.util.List;
 @Tag(name = "Applicant API", description = "지원자 조회 API")
 public class ApplicantController {
     private final ApplicantService applicantService;
-    private final FileStorageService fileStorageService;
+    private final S3Service s3Service;
 
-    public ApplicantController(ApplicantService applicantService, FileStorageService fileStorageService) {
+    public ApplicantController(ApplicantService applicantService, S3Service s3Service) {
         this.applicantService = applicantService;
-        this.fileStorageService = fileStorageService;
+        this.s3Service = s3Service;
     }
 
     @GetMapping("/applicant")
@@ -34,10 +35,10 @@ public class ApplicantController {
             @ApiResponse(responseCode = "200", description = "지원자 리스트 조회 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<List<ApplicantRequestDTO>> getApplicantsByRecruitmentId(@PathVariable Long id) {
-        List<ApplicantRequestDTO> applicantsInputDTO = applicantService.getApplicantsByRecruitmentId(id);
+    public ResponseEntity<List<ApplicantResponseDTO>> getApplicantListByRecruitmentId(@PathVariable Long id) {
+        List<ApplicantResponseDTO> applicantListInputDTO = applicantService.getApplicantListByRecruitmentId(id);
 
-        return ResponseEntity.ok().body(applicantsInputDTO);
+        return ResponseEntity.ok().body(applicantListInputDTO);
     }
 
     @PostMapping
@@ -46,8 +47,8 @@ public class ApplicantController {
             @ApiResponse(responseCode = "200", description = "지원자 리스트 저장 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<ApplicantRequestDTO> postRecruitment(@RequestBody ApplicantRequestDTO applicantRequestDTO, @PathVariable Long id) {
-        applicantService.applicantCreate(applicantRequestDTO, id);
+    public ResponseEntity<ApplicantRequestDTO> createRecruitment(@RequestBody ApplicantRequestDTO applicantRequestDTO, @PathVariable Long id) {
+        applicantService.createApplicant(applicantRequestDTO, id);
         return ResponseEntity.ok()
                 .body(applicantRequestDTO);
     }
@@ -68,8 +69,7 @@ public class ApplicantController {
             );
             return ResponseEntity.badRequest().body(response);
         }
-
-        List<String> uploadedFileNames = fileStorageService.storeFiles(files);
+        List<String> uploadedFileNames = s3Service.storeFiles(files, id);
         FileUploadResponseDTO response = new FileUploadResponseDTO(
                 "success",
                 uploadedFileNames.size() + " files uploaded successfully.",
@@ -78,4 +78,5 @@ public class ApplicantController {
         return ResponseEntity.ok()
                 .body(response);
     }
+
 }

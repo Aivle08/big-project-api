@@ -12,11 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/posts")
-@Tag(name = "Post API", description = "게시글 API")
+@Tag(name = "Post API", description = "게시글 crud API")
 public class PostController {
 
     private final PostRepository postRepository;
@@ -43,9 +42,10 @@ public class PostController {
     @Operation(summary = "전체 게시글 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "게시글 목록 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<List<PostResponseDTO>> getPostsByCompany() {
-        List<PostResponseDTO> posts = postService.getPostsByCompany();
+    public ResponseEntity<List<PostResponseDTO>> getPostListByCompany() {
+        List<PostResponseDTO> posts = postService.getPostListByCompany();
         return ResponseEntity.ok(posts);
     }
 

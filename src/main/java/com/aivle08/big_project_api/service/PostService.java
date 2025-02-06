@@ -7,6 +7,7 @@ import com.aivle08.big_project_api.model.Users;
 import com.aivle08.big_project_api.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,23 +16,32 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UsersService usersService;
+    private final CommentService commentService;
 
-    public PostService(PostRepository postRepository, UsersService usersService) {
+    public PostService(PostRepository postRepository, UsersService usersService, CommentService commentService) {
         this.postRepository = postRepository;
         this.usersService = usersService;
+        this.commentService = commentService;
     }
 
     public PostResponseDTO createPost(PostRequestDTO postRequestDTO) {
         Users author = usersService.getCurrentUser();
 
-        Post post = new Post(postRequestDTO.getTitle(), postRequestDTO.getContent(), author);
-        Post savedPost = postRepository.save(post);
+        Post createdPost = Post.builder()
+                .title(postRequestDTO.getTitle())
+                .content(postRequestDTO.getContent())
+                .author(author)
+                .updatedAt(null)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Post savedPost = postRepository.save(createdPost);
 
         return PostResponseDTO.fromEntity(savedPost);
     }
 
 
-    public List<PostResponseDTO> getPostsByCompany() {
+    public List<PostResponseDTO> getPostListByCompany() {
 
         List<Post> posts = postRepository.findByAuthor_Company(usersService.getCurrentUser().getCompany());
 
@@ -52,13 +62,19 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 
-        if (post.getAuthor().getId().equals(usersService.getCurrentUser().getId())) {
-            post.updatePost(requestDto.getTitle(), requestDto.getContent());
-            Post updatedPost = postRepository.save(post);
+        Post updatedPost = Post.builder()
+                .id(post.getId())
+                .title(requestDto.getTitle())
+                .content(requestDto.getContent())
+                .author(post.getAuthor())
+                .updatedAt(LocalDateTime.now())
+                .createdAt(post.getCreatedAt())
+                .comments(post.getComments())
+                .build();
 
-            return PostResponseDTO.fromEntity(updatedPost);
-        }
-        else throw new RuntimeException("해당 게시글에 접근할 수 없습니다.");
+        Post savedPost = postRepository.save(updatedPost);
+
+        return PostResponseDTO.fromEntity(savedPost);
     }
 
     public void deletePost(Long id) {
@@ -67,7 +83,6 @@ public class PostService {
 
         if (post.getAuthor().getId().equals(usersService.getCurrentUser().getId())) {
             postRepository.deleteById(id);
-        }
-        else throw new RuntimeException("해당 게시글에 접근할 수 없습니다.");
+        } else throw new RuntimeException("해당 게시글에 접근할 수 없습니다.");
     }
 }

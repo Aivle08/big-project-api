@@ -1,5 +1,6 @@
 package com.aivle08.big_project_api.service;
 
+import com.aivle08.big_project_api.dto.request.ApplicantRequestDTO;
 import com.aivle08.big_project_api.dto.response.EvaluationDetailResponseDTO;
 import com.aivle08.big_project_api.dto.response.EvaluationResponseDTO;
 import com.aivle08.big_project_api.dto.response.PassedApplicantResponseDTO;
@@ -8,10 +9,12 @@ import com.aivle08.big_project_api.model.EvaluationScore;
 import com.aivle08.big_project_api.repository.ApplicantRepository;
 import com.aivle08.big_project_api.repository.EvaluationScoreRepository;
 import com.aivle08.big_project_api.repository.RecruitmentRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EvaluationService {
@@ -28,11 +31,12 @@ public class EvaluationService {
         this.applicantRepository = applicantRepository;
     }
 
-    public EvaluationResponseDTO getScoresByApplicantIdandRecruitmentId(Long recruitmentId, Long applicantId) {
+    public EvaluationResponseDTO getScoreListByApplicantIdAndRecruitmentId(Long recruitmentId, Long applicantId) {
+
         String recruitmentTitle = recruitmentRepository.findById(recruitmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid recruitmentId")).getTitle();
 
-        List<Long> applicantIds = applicantService.getApplicantIDsByRecruitmentId(recruitmentId);
+        List<Long> applicantIds = applicantService.getApplicantIdListByRecruitmentId(recruitmentId);
 
         if (!applicantIds.contains(applicantId)) {
             throw new IllegalArgumentException("ApplicantId가 없습니다.");
@@ -45,19 +49,13 @@ public class EvaluationService {
                 .stream()
                 .map(evaluationScore -> {
                     String summary = evaluationScore.getEvaluationDetail().getSummary();
-
-                    String item = evaluationScore.getEvaluationDetail()
-                            .getEvaluation()
-                            .getItem();
-
                     return EvaluationDetailResponseDTO.builder()
                             .score(evaluationScore.getScore())
                             .summary(summary)
-                            .title(item)
                             .build();
                 })
                 .toList();
-        
+
         return EvaluationResponseDTO.builder()
                 .recruitmentTitle(recruitmentTitle)
                 .applicationName(applicationName)
@@ -65,7 +63,7 @@ public class EvaluationService {
                 .build();
     }
 
-    public PassedApplicantResponseDTO getPassedApplicants(Long recruitmentId) {
+    public PassedApplicantResponseDTO getPassedApplicantList(Long recruitmentId) {
 
         String recruitmentTitle = recruitmentRepository.findById(recruitmentId)
                 .map(r -> r.getTitle())
@@ -79,16 +77,16 @@ public class EvaluationService {
 
             for (EvaluationScore evaluationScore : applicant.getEvaluationScoreList()) {
                 scoreDetails.add(EvaluationDetailResponseDTO.builder()
-                        .score(evaluationScore.getScore())  // 평가 점수
-                        .summary(evaluationScore.getEvaluationDetail().getSummary())  // 평가 요약 (EvaluationDetail)
-                        .title(evaluationScore.getEvaluationDetail().getEvaluation().getDetail())  // 평가 제목 (Evaluation)
+                        .score(evaluationScore.getScore())
+                        .summary(evaluationScore.getEvaluationDetail().getSummary())
+                        .title(evaluationScore.getEvaluation().getItem())
                         .build());
             }
 
             passList.add(EvaluationResponseDTO.builder()
-                    .recruitmentTitle(recruitmentTitle) // 채용 공고 제목
-                    .applicationName(applicant.getName()) // 지원자 이름
-                    .scoreDetails(scoreDetails) // 평가 점수 리스트
+                    .recruitmentTitle(recruitmentTitle)
+                    .applicationName(applicant.getName())
+                    .scoreDetails(scoreDetails)
                     .build());
         }
 
@@ -98,33 +96,50 @@ public class EvaluationService {
                 .build();
     }
 
-    public List<EvaluationResponseDTO> getAllApplicantEvaluations(Long recruitmentId) {
+    public List<EvaluationResponseDTO> getApplicantEvaluationList(Long recruitmentId) {
 
         String recruitmentTitle = recruitmentRepository.findById(recruitmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid recruitmentId")).getTitle();
 
         List<Applicant> passedApplicants = applicantRepository.findByRecruitmentId(recruitmentId);
 
-        List<EvaluationResponseDTO> AllList = new ArrayList<>();
+        List<EvaluationResponseDTO> allList = new ArrayList<>();
         for (Applicant applicant : passedApplicants) {
             List<EvaluationDetailResponseDTO> scoreDetails = new ArrayList<>();
 
             for (EvaluationScore evaluationScore : applicant.getEvaluationScoreList()) {
                 scoreDetails.add(EvaluationDetailResponseDTO.builder()
-                        .score(evaluationScore.getScore())  // 평가 점수
-                        .summary(evaluationScore.getEvaluationDetail().getSummary())  // 평가 요약 (EvaluationDetail)
-                        .title(evaluationScore.getEvaluationDetail().getEvaluation().getDetail())  // 평가 제목 (Evaluation)
+                        .score(evaluationScore.getScore())
+                        .summary(evaluationScore.getEvaluationDetail().getSummary())
+                        .title(evaluationScore.getEvaluation().getItem())
                         .build());
             }
 
-            AllList.add(EvaluationResponseDTO.builder()
-                    .recruitmentTitle(recruitmentTitle) // 채용 공고 제목
-                    .applicationName(applicant.getName()) // 지원자 이름
-                    .scoreDetails(scoreDetails) // 평가 점수 리스트
+            allList.add(EvaluationResponseDTO.builder()
+                    .recruitmentTitle(recruitmentTitle)
+                    .applicationName(applicant.getName())
+                    .scoreDetails(scoreDetails)
                     .build());
         }
 
-        return AllList;
+        return allList;
     }
 
+    @Transactional
+    public List<ApplicantRequestDTO> getPassApplicantById(List<Long> applicantIdList) {
+
+        for (Long applicantId : applicantIdList) {
+            int updatedCount = applicantRepository.updateResumeResultToPassed(applicantId);
+
+            if (updatedCount == 0) {
+                throw new IllegalArgumentException("지원자 ID " + applicantId + "가 존재하지 않거나 이미 합격 처리되었습니다.");
+            }
+        }
+
+        List<Applicant> updatedApplicants = applicantRepository.findAllById(applicantIdList);
+
+        return updatedApplicants.stream()
+                .map(ApplicantRequestDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
 }

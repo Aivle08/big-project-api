@@ -9,22 +9,17 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class EvaluationScore {
+public class ResumeRetriever {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer score;
-
-    @ManyToOne
-    @JoinColumn(name = "evaluation_id")
-    private Evaluation evaluation;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "evaluation_detail_id")
-    private EvaluationDetail evaluationDetail;
 
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "applicant_id")
     private Applicant applicant;
+
+    private String retriever_result;
+
 }

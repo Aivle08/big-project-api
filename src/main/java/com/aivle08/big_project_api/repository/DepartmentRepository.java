@@ -7,5 +7,4 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface DepartmentRepository extends CrudRepository<Department, Long> {
-    Optional<Department> findByNameAndCompany(String name, Company company);
 }

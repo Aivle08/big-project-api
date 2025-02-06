@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,16 +34,7 @@ public class Post {
     @Column
     private LocalDateTime updatedAt;
 
-    public Post(String title, String content, Users author) {
-        this.title = title;
-        this.content = content;
-        this.author = author;
-        this.createdAt = LocalDateTime.now();
-    }
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
-    public void updatePost(String title, String content) {
-        this.title = title;
-        this.content = content;
-        this.updatedAt = LocalDateTime.now();
-    }
 }

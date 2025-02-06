@@ -1,6 +1,7 @@
 package com.aivle08.big_project_api.service;
 
 import com.aivle08.big_project_api.dto.request.ApplicantRequestDTO;
+import com.aivle08.big_project_api.dto.response.ApplicantResponseDTO;
 import com.aivle08.big_project_api.model.Applicant;
 import com.aivle08.big_project_api.model.Recruitment;
 import com.aivle08.big_project_api.repository.ApplicantRepository;
@@ -20,29 +21,25 @@ public class ApplicantService {
         this.recruitmentRepository = recruitmentRepository;
     }
 
-    public List<Applicant> getApplicants() {
-        return applicantRepository.findAll();
-    }
-
-    public List<ApplicantRequestDTO> getApplicantsByRecruitmentId(Long recruitmentId) {
+    public List<ApplicantResponseDTO> getApplicantListByRecruitmentId(Long recruitmentId) {
         List<Applicant> applicant = applicantRepository.findByRecruitmentId(recruitmentId);
+        List<ApplicantResponseDTO> applicantResponseDTOList = applicant.stream().map(ApplicantResponseDTO::fromEntity).toList();
 
-        List<ApplicantRequestDTO> applicantRequestDTOList = applicant.stream().map(ApplicantRequestDTO::fromEntity).toList();
-        return applicantRequestDTOList;
+        return applicantResponseDTOList;
     }
 
-    public List<Long> getApplicantIDsByRecruitmentId(Long recruitmentId) {
+    public List<Long> getApplicantIdListByRecruitmentId(Long recruitmentId) {
         List<Applicant> applicants = applicantRepository.findByRecruitmentId(recruitmentId);
 
-        List<Long> applicantIds = applicants.stream()
+        List<Long> applicantIdList = applicants.stream()
                 .map(Applicant::getId)
                 .toList();
 
-        return applicantIds;
+        return applicantIdList;
     }
 
     @Transactional
-    public ApplicantRequestDTO applicantCreate(ApplicantRequestDTO applicantRequestDTO, Long recruitmentId) {
+    public ApplicantRequestDTO createApplicant(ApplicantRequestDTO applicantRequestDTO, Long recruitmentId) {
         Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElse(null);
 
         Applicant applicant = Applicant.builder()
