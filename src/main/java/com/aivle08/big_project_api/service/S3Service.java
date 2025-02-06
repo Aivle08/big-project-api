@@ -37,7 +37,6 @@ public class S3Service {
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(file.getSize());
             metadata.setContentType(file.getContentType());
-            System.out.println(bucketName);
             s3Client.putObject(new PutObjectRequest(bucketName, keyName, file.getInputStream(), metadata));
 
             return s3Client.getUrl(bucketName, keyName).toString();
