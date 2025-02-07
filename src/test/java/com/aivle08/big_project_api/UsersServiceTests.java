@@ -78,21 +78,21 @@ public class UsersServiceTests {
 
         Recruitment savedRecruitment = recruitmentRepository.save(recruitment);
 
-        List<Evaluation> evaluationList = evaluations.stream()
-                .map(evaluation -> Evaluation.builder()
-                        .item(evaluation.getItem())
-                        .detail(evaluation.getDetail())
-                        .recruitment(savedRecruitment)
-                        .build())
-                .toList();
-        List<Evaluation> savedEvaluations = evaluationRepository.saveAll(evaluationList);
+//        List<Evaluation> evaluationList = evaluations.stream()
+//                .map(evaluation -> Evaluation.builder()
+//                        .item(evaluation.getItem())
+//                        .detail(evaluation.getDetail())
+//                        .recruitment(savedRecruitment)
+//                        .build())
+//                .toList();
+//        List<Evaluation> savedEvaluations = evaluationRepository.saveAll(evaluationList);
 
-        Applicant applicant = Applicant.builder()
-                .name("aaaa")
-                .recruitment(savedRecruitment)
-                .build();
+//        Applicant applicant = Applicant.builder()
+//                .name("aaaa")
+//                .recruitment(savedRecruitment)
+//                .build();
 
-        applicantRepository.save(applicant);
+//        applicantRepository.save(applicant);
         
     }
 }

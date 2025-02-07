@@ -1,7 +1,9 @@
 package com.aivle08.big_project_api.controller;
 
+import com.aivle08.big_project_api.constants.ProcessingStatus;
 import com.aivle08.big_project_api.dto.request.RecruitmentRequestDTO;
 import com.aivle08.big_project_api.dto.response.RecruitmentResponseDTO;
+import com.aivle08.big_project_api.repository.RecruitmentRepository;
 import com.aivle08.big_project_api.service.RecruitmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,9 +20,11 @@ import java.util.List;
 public class RecruitmentController {
 
     private final RecruitmentService recruitmentService;
+    private final RecruitmentRepository recruitmentRepository;
 
-    public RecruitmentController(RecruitmentService recruitmentService) {
+    public RecruitmentController(RecruitmentService recruitmentService, RecruitmentRepository recruitmentRepository) {
         this.recruitmentService = recruitmentService;
+        this.recruitmentRepository = recruitmentRepository;
     }
 
     @GetMapping
@@ -44,5 +48,12 @@ public class RecruitmentController {
         RecruitmentResponseDTO recruitmentResponseDTO = recruitmentService.createRecruitment(recruitmentRequestDTO);
         return ResponseEntity.ok()
                 .body(recruitmentResponseDTO);
+    }
+
+    @GetMapping("/{recruitmentId}/status")
+    public ResponseEntity<ProcessingStatus> getRecruitmentProcessingStatus(@PathVariable Long recruitmentId) {
+        return recruitmentRepository.findById(recruitmentId)
+                .map(recruitment -> ResponseEntity.ok(recruitment.getProcessingStatus()))
+                .orElse(ResponseEntity.notFound().build());
     }
 }
