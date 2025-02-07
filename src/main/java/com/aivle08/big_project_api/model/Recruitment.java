@@ -35,13 +35,21 @@ public class Recruitment {
     @Enumerated(EnumType.STRING)
     private ProcessingStatus processingStatus = ProcessingStatus.NOT_STARTED;
 
+    @Enumerated(EnumType.STRING)
+    private ProcessingStatus scoreProcessingStatus = ProcessingStatus.NOT_STARTED;
+
     @Builder
-    public Recruitment(String title) {
-        this.title = title;
+    public Recruitment(String job) {
+        this.job = job;
         this.processingStatus = ProcessingStatus.NOT_STARTED;
+        this.scoreProcessingStatus = ProcessingStatus.NOT_STARTED;
     }
 
     public void updateProcessingStatus(ProcessingStatus newStatus) {
         this.processingStatus = newStatus;
+    }
+
+    public void updateScoreProcessingStatus(ProcessingStatus newStatus) {
+        this.scoreProcessingStatus = newStatus;
     }
 }
