@@ -3,7 +3,6 @@ package com.aivle08.big_project_api.service;
 import com.aivle08.big_project_api.dto.request.ApplicantRequestDTO;
 import com.aivle08.big_project_api.dto.response.EvaluationDetailResponseDTO;
 import com.aivle08.big_project_api.dto.response.EvaluationResponseDTO;
-import com.aivle08.big_project_api.dto.response.PassedApplicantResponseDTO;
 import com.aivle08.big_project_api.model.Applicant;
 import com.aivle08.big_project_api.model.EvaluationScore;
 import com.aivle08.big_project_api.repository.ApplicantRepository;
@@ -63,7 +62,7 @@ public class EvaluationService {
                 .build();
     }
 
-    public PassedApplicantResponseDTO getPassedApplicantList(Long recruitmentId) {
+    public List<EvaluationResponseDTO> getPassedApplicantList(Long recruitmentId) {
 
         String recruitmentTitle = recruitmentRepository.findById(recruitmentId)
                 .map(r -> r.getTitle())
@@ -90,10 +89,7 @@ public class EvaluationService {
                     .build());
         }
 
-        return PassedApplicantResponseDTO.builder()
-                .recruitmentTitle(recruitmentTitle)
-                .passList(passList)
-                .build();
+        return passList;
     }
 
     public List<EvaluationResponseDTO> getApplicantEvaluationList(Long recruitmentId) {
