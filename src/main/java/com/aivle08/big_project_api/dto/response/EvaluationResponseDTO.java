@@ -12,6 +12,7 @@ import java.util.List;
 public class EvaluationResponseDTO {
     private String recruitmentTitle;
     private String applicationName;
+    private Long applicantId;
 
     private List<EvaluationDetailResponseDTO> scoreDetails;
 }

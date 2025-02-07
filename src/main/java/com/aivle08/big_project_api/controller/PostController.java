@@ -2,7 +2,6 @@ package com.aivle08.big_project_api.controller;
 
 import com.aivle08.big_project_api.dto.request.PostRequestDTO;
 import com.aivle08.big_project_api.dto.response.PostResponseDTO;
-import com.aivle08.big_project_api.repository.PostRepository;
 import com.aivle08.big_project_api.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,11 +17,9 @@ import java.util.List;
 @Tag(name = "Post API", description = "게시글 crud API")
 public class PostController {
 
-    private final PostRepository postRepository;
     private final PostService postService;
 
-    public PostController(PostRepository postRepository, PostService postService) {
-        this.postRepository = postRepository;
+    public PostController(PostService postService) {
         this.postService = postService;
     }
 
@@ -36,7 +33,6 @@ public class PostController {
         PostResponseDTO createdPost = postService.createPost(requestDto);
         return ResponseEntity.ok(createdPost);
     }
-
 
     @GetMapping
     @Operation(summary = "전체 게시글 조회")
@@ -59,7 +55,6 @@ public class PostController {
         PostResponseDTO post = postService.getPostById(id);
         return ResponseEntity.ok(post);
     }
-
 
     @PutMapping("/{id}")
     @Operation(summary = "게시글 수정")

@@ -2,7 +2,6 @@ package com.aivle08.big_project_api.controller;
 
 import com.aivle08.big_project_api.dto.request.CommentRequestDTO;
 import com.aivle08.big_project_api.dto.response.CommentResponseDTO;
-import com.aivle08.big_project_api.service.ApiService;
 import com.aivle08.big_project_api.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,11 +17,9 @@ import java.util.List;
 @Tag(name = "Comment API", description = "댓글 crud API")
 public class CommentController {
     private final CommentService commentService;
-    private final ApiService apiService;
 
-    public CommentController(CommentService commentService, ApiService apiService) {
+    public CommentController(CommentService commentService) {
         this.commentService = commentService;
-        this.apiService = apiService;
     }
 
     @GetMapping

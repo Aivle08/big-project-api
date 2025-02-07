@@ -3,10 +3,10 @@ package com.aivle08.big_project_api.service;
 import com.aivle08.big_project_api.dto.request.ApplicantRequestDTO;
 import com.aivle08.big_project_api.dto.response.EvaluationDetailResponseDTO;
 import com.aivle08.big_project_api.dto.response.EvaluationResponseDTO;
-import com.aivle08.big_project_api.dto.response.PassedApplicantResponseDTO;
 import com.aivle08.big_project_api.model.Applicant;
 import com.aivle08.big_project_api.model.EvaluationScore;
 import com.aivle08.big_project_api.repository.ApplicantRepository;
+import com.aivle08.big_project_api.repository.EvaluationDetailRepository;
 import com.aivle08.big_project_api.repository.EvaluationScoreRepository;
 import com.aivle08.big_project_api.repository.RecruitmentRepository;
 import jakarta.transaction.Transactional;
@@ -23,12 +23,14 @@ public class EvaluationService {
     private final ApplicantService applicantService;
     private final RecruitmentRepository recruitmentRepository;
     private final ApplicantRepository applicantRepository;
+    private final EvaluationDetailRepository evaluationDetailRepository;
 
-    public EvaluationService(EvaluationScoreRepository evaluationScoreRepository, ApplicantService applicantService, RecruitmentRepository recruitmentRepository, ApplicantRepository applicantRepository) {
+    public EvaluationService(EvaluationScoreRepository evaluationScoreRepository, ApplicantService applicantService, RecruitmentRepository recruitmentRepository, ApplicantRepository applicantRepository, EvaluationDetailRepository evaluationDetailRepository) {
         this.evaluationScoreRepository = evaluationScoreRepository;
         this.applicantService = applicantService;
         this.recruitmentRepository = recruitmentRepository;
         this.applicantRepository = applicantRepository;
+        this.evaluationDetailRepository = evaluationDetailRepository;
     }
 
     public EvaluationResponseDTO getScoreListByApplicantIdAndRecruitmentId(Long recruitmentId, Long applicantId) {
@@ -63,7 +65,7 @@ public class EvaluationService {
                 .build();
     }
 
-    public PassedApplicantResponseDTO getPassedApplicantList(Long recruitmentId) {
+    public List<EvaluationResponseDTO> getPassedApplicantList(Long recruitmentId) {
 
         String recruitmentTitle = recruitmentRepository.findById(recruitmentId)
                 .map(r -> r.getTitle())
@@ -76,24 +78,26 @@ public class EvaluationService {
             List<EvaluationDetailResponseDTO> scoreDetails = new ArrayList<>();
 
             for (EvaluationScore evaluationScore : applicant.getEvaluationScoreList()) {
-                scoreDetails.add(EvaluationDetailResponseDTO.builder()
+
+                EvaluationDetailResponseDTO evaluationDetailResponseDTO = EvaluationDetailResponseDTO.builder()
                         .score(evaluationScore.getScore())
                         .summary(evaluationScore.getEvaluationDetail().getSummary())
                         .title(evaluationScore.getEvaluation().getItem())
-                        .build());
+                        .build();
+
+                scoreDetails.add(evaluationDetailResponseDTO);
             }
 
-            passList.add(EvaluationResponseDTO.builder()
+            EvaluationResponseDTO evaluationResponseDTO = EvaluationResponseDTO.builder()
                     .recruitmentTitle(recruitmentTitle)
                     .applicationName(applicant.getName())
                     .scoreDetails(scoreDetails)
-                    .build());
-        }
+                    .applicantId(applicant.getId())
+                    .build();
 
-        return PassedApplicantResponseDTO.builder()
-                .recruitmentTitle(recruitmentTitle)
-                .passList(passList)
-                .build();
+            passList.add(evaluationResponseDTO);
+        }
+        return passList;
     }
 
     public List<EvaluationResponseDTO> getApplicantEvaluationList(Long recruitmentId) {

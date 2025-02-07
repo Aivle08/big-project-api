@@ -4,29 +4,21 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Table(
-        name = "department",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"company_id", "name"})
-)
-public class Department {
+public class ResumeRetriever {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
-    private String name;
 
     @ManyToOne
     @JsonIgnore
-    private Company company;
+    @JoinColumn(name = "applicant_id")
+    private Applicant applicant;
 
-    @OneToMany
-    @JoinColumn(name = "department_id")
-    private List<Recruitment> recruitmentList;
+    private String chunk;
 }
