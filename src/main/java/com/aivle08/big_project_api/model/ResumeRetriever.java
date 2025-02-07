@@ -20,6 +20,5 @@ public class ResumeRetriever {
     @JoinColumn(name = "applicant_id")
     private Applicant applicant;
 
-    private String retriever_result;
-
+    private String chunk;
 }

@@ -29,7 +29,7 @@ public class ResumeRetrieverService {
 
         ResumeRetriever retriever = ResumeRetriever.builder()
                 .applicant(applicantRepository.findById(applicant_id).get())
-                .retriever_result(resumeRetriever.getRetriever_result())
+                .chunk(resumeRetriever.getChunk())
                 .build();
         System.out.println("t2");
 
