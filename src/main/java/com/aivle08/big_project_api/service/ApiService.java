@@ -1,8 +1,12 @@
 package com.aivle08.big_project_api.service;
 
 import com.aivle08.big_project_api.dto.api.request.PdfInfoListRequestDTO;
+import com.aivle08.big_project_api.dto.api.request.QuestionRequestDTO;
+import com.aivle08.big_project_api.dto.api.request.ScoreRequestDTO;
 import com.aivle08.big_project_api.dto.api.response.ApiResponseDTO;
 import com.aivle08.big_project_api.dto.api.response.ExtractionResponseDTO;
+import com.aivle08.big_project_api.dto.api.response.QuestionResponseDTO;
+import com.aivle08.big_project_api.dto.api.response.ScoreResponseDTO;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -41,6 +45,26 @@ public class ApiService {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<ExtractionResponseDTO>>() {});
 
+        return responseMono.block();
+    }
+
+    public ApiResponseDTO<QuestionResponseDTO> callQuestionApi(QuestionRequestDTO requestDTO, String param) {
+        Mono<ApiResponseDTO<QuestionResponseDTO>> responseMono = webClient.post()
+                .uri("/question/" + param)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestDTO)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<QuestionResponseDTO>>() {});
+        return responseMono.block();
+    }
+
+    public ApiResponseDTO<ScoreResponseDTO> callScoreApi(ScoreRequestDTO requestDTO) {
+        Mono<ApiResponseDTO<ScoreResponseDTO>> responseMono = webClient.post()
+                .uri("/score")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestDTO)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<ScoreResponseDTO>>() {});
         return responseMono.block();
     }
 
