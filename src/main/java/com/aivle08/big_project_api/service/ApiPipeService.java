@@ -164,9 +164,9 @@ public class ApiPipeService {
         }
 
          //각 지원자별 요약 API 호출 및 업데이트를 비동기로 처리
-        List<CompletableFuture<Void>> futures = applicants.stream()
-//                .map( se -> applicantProcessingService.processEvaluationScoreAsync(se, recruitment.getJob()))
-                .map( se -> applicantProcessingService.processApplicantScore(se, recruitment.getJob()))
+        List<CompletableFuture<Void>> futures = savedEvaluationScoreList.stream()
+                .map( se -> applicantProcessingService.processEvaluationScoreAsync(se, recruitment.getJob()))
+//                .map( se -> applicantProcessingService.processApplicantScore(se, recruitment.getJob()))
                 .collect(Collectors.toList());
 
          //모든 비동기 작업이 완료될 때까지 대기 (필요에 따라 timeout 등 추가 고려)

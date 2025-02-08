@@ -126,7 +126,7 @@ public class ApplicantProcessingService {
         applicantRepository.save(applicant);
     }
 
-    @Transactional  // 개별 작업마다 트랜잭션 적용 (필요에 따라 범위를 조절)
+    @Transactional
     public CompletableFuture<Void> processEvaluationScoreAsync(EvaluationScore e, String job) {
         try {
             // 0. 시작 시, 지원자의 scoreProcessingStatus를 IN_PROGRESS로 업데이트
@@ -177,6 +177,8 @@ public class ApplicantProcessingService {
             // 예외 발생 시 scoreProcessingStatus를 FAILED로 업데이트
             updateApplicantScoreProcessingStatus(e.getApplicant().getId(), ProcessingStatus.FAILED);
         }
+        updateRecruitmentScoreStatus(e.getApplicant().getRecruitment().getId());
+
         return CompletableFuture.completedFuture(null);
     }
 
@@ -209,6 +211,9 @@ public class ApplicantProcessingService {
             // 예외 발생 시 scoreProcessingStatus를 FAILED로 업데이트
             updateApplicantScoreProcessingStatus(applicant.getId(), ProcessingStatus.FAILED);
         }
+
+        updateRecruitmentScoreStatus(applicant.getRecruitment().getId());
+
         return CompletableFuture.completedFuture(null);
     }
 
