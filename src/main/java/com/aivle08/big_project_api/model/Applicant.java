@@ -37,6 +37,9 @@ public class Applicant {
     @Enumerated(EnumType.STRING)
     private ProcessingStatus processingStatus;
 
+    @Enumerated(EnumType.STRING)
+    private ProcessingStatus scoreProcessingStatus;
+
     @Builder
     public Applicant(String name, String fileName) {
         this.name = name;
@@ -47,6 +50,10 @@ public class Applicant {
     // 상태 변경 메서드
     public void updateProcessingStatus(ProcessingStatus status) {
         this.processingStatus = status;
+    }
+
+    public void updateScoreProcessingStatus(ProcessingStatus status) {
+        this.scoreProcessingStatus = status;
     }
 
     // API 응답을 바탕으로 지원자 정보 업데이트

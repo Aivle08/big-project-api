@@ -56,4 +56,14 @@ public class RecruitmentController {
                 .map(recruitment -> ResponseEntity.ok(recruitment.getProcessingStatus()))
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/{recruitmentId}/score-status")
+    public ResponseEntity<?> getRecruitmentScoreStatus(@PathVariable Long recruitmentId) {
+        return recruitmentRepository.findById(recruitmentId)
+                .map(recruitment -> {
+                    ProcessingStatus status = recruitment.getScoreProcessingStatus();
+                    return ResponseEntity.ok(status);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
