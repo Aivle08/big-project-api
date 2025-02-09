@@ -67,4 +67,9 @@ public class ApplicantService {
 
         return ApplicantRequestDTO.fromEntity(savedApplicant);
     }
+
+    public ApplicantResponseDTO getApplicantById(Long applicantId) {
+        Applicant applicant = applicantRepository.findById(applicantId).get();
+        return ApplicantResponseDTO.fromEntity(applicant);
+    }
 }
