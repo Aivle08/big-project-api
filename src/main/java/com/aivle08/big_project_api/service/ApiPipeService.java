@@ -151,19 +151,21 @@ public class ApiPipeService {
         List<Evaluation> evaluations = evaluationRepository.findByRecruitment_id(recruitmentId);
         List<EvaluationScore> savedEvaluationScoreList = new ArrayList<>();
 
-        for (Applicant applicant : applicants) {
-            for (Evaluation evaluation : evaluations) {
-                EvaluationDetail evaluationDetail = EvaluationDetail.builder()
-                        .build();
-                EvaluationDetail savedEvaluationDetail = evaluationDetailRepository.save(evaluationDetail);
+        if (applicants.get(0).getEvaluationScoreList() == null) {
+            for (Applicant applicant : applicants) {
+                for (Evaluation evaluation : evaluations) {
+                    EvaluationDetail evaluationDetail = EvaluationDetail.builder()
+                            .build();
+                    EvaluationDetail savedEvaluationDetail = evaluationDetailRepository.save(evaluationDetail);
 
-                EvaluationScore evaluationScore = EvaluationScore.builder()
-                        .evaluation(evaluation)
-                        .applicant(applicant)
-                        .evaluationDetail(savedEvaluationDetail)
-                        .build();
-                EvaluationScore savedEvaluationScore = evaluationScoreRepository.save(evaluationScore);
-                savedEvaluationScoreList.add(savedEvaluationScore);
+                    EvaluationScore evaluationScore = EvaluationScore.builder()
+                            .evaluation(evaluation)
+                            .applicant(applicant)
+                            .evaluationDetail(savedEvaluationDetail)
+                            .build();
+                    EvaluationScore savedEvaluationScore = evaluationScoreRepository.save(evaluationScore);
+                    savedEvaluationScoreList.add(savedEvaluationScore);
+                }
             }
         }
 
