@@ -16,6 +16,7 @@ public class EvaluationScore {
     private Integer score;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "evaluation_id")
     private Evaluation evaluation;
 
