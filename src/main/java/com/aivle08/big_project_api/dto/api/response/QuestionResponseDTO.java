@@ -1,6 +1,5 @@
 package com.aivle08.big_project_api.dto.api.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.List;
@@ -11,6 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class QuestionResponseDTO {
-    @JsonProperty("final_question")
-    private List<String> finalQuestion;
+    private QuestionContentDTO question;
+    private List<String> chunk;
 }
