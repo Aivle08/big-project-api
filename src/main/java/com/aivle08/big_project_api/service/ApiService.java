@@ -2,6 +2,7 @@ package com.aivle08.big_project_api.service;
 
 import com.aivle08.big_project_api.dto.api.request.PdfInfoListRequestDTO;
 import com.aivle08.big_project_api.dto.api.request.QuestionRequestDTO;
+import com.aivle08.big_project_api.dto.api.request.RecruitmentInputDTO;
 import com.aivle08.big_project_api.dto.api.request.ScoreRequestDTO;
 import com.aivle08.big_project_api.dto.api.response.ApiResponseDTO;
 import com.aivle08.big_project_api.dto.api.response.ExtractionResponseDTO;
@@ -65,6 +66,16 @@ public class ApiService {
                 .bodyValue(requestDTO)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<ScoreResponseDTO>>() {});
+        return responseMono.block();
+    }
+
+    public ApiResponseDTO<Void> callInserDetail(RecruitmentInputDTO requestDTO) {
+        Mono<ApiResponseDTO<Void>> responseMono = webClient.post()
+                .uri("/zilliz/insertDetail")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestDTO)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<Void>>() {});
         return responseMono.block();
     }
 
