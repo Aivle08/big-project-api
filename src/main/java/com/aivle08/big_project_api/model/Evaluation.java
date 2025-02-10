@@ -16,6 +16,7 @@ public class Evaluation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String item;
+    @Column(columnDefinition = "TEXT")
     private String detail;
 
     @OneToMany

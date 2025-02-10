@@ -1,5 +1,6 @@
 package com.aivle08.big_project_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,5 +16,6 @@ public class EvaluationDetail {
     private String summary;
 
     @OneToOne(mappedBy = "evaluationDetail")
+    @JsonIgnore
     private EvaluationScore evaluationScore;
 }

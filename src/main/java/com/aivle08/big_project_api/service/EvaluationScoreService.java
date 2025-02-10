@@ -9,6 +9,7 @@ import com.aivle08.big_project_api.repository.ApplicantRepository;
 import com.aivle08.big_project_api.repository.EvaluationDetailRepository;
 import com.aivle08.big_project_api.repository.EvaluationRepository;
 import com.aivle08.big_project_api.repository.EvaluationScoreRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,18 +35,20 @@ public class EvaluationScoreService {
     public List<EvaluationScore> createEvaluationScoreList(List<EvaluationScoreRequestDTO> evaluationScores, Long applicantId) {
 
         Applicant applicant = applicantRepository.findById(applicantId)
-                .orElseThrow(() -> new IllegalArgumentException("지원자를 찾을 수 없습니다: " + applicantId));
+                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 지원자를 찾을 수 없습니다. ID: " + applicantId));
 
-        List<EvaluationScore> newEvaluationScores = new ArrayList<>();
+        List<EvaluationScore> evaluationScoreList = new ArrayList<>();
+
         for (EvaluationScoreRequestDTO scoreDTO : evaluationScores) {
+
+            Evaluation evaluation = evaluationRepository.findById(scoreDTO.getEvaluationId())
+                    .orElseThrow(() -> new EntityNotFoundException("해당 ID의 평가를 찾을 수 없습니다. ID: " + scoreDTO.getEvaluationId()));
 
             EvaluationDetail evaluationDetail = EvaluationDetail.builder()
                     .summary(scoreDTO.getSummary())
                     .build();
 
             EvaluationDetail savedEvaluationDetail = evaluationDetailRepository.save(evaluationDetail);
-
-            Evaluation evaluation = evaluationRepository.findById(scoreDTO.getEvaluationId()).get();
 
             EvaluationScore evaluationScore = EvaluationScore.builder()
                     .evaluation(evaluation)
@@ -55,9 +58,10 @@ public class EvaluationScoreService {
                     .build();
 
             evaluationScoreRepository.save(evaluationScore);
-            newEvaluationScores.add(evaluationScore);
+            evaluationScoreList.add(evaluationScore);
         }
 
-        return newEvaluationScores;
+        return evaluationScoreList;
     }
+
 }

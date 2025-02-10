@@ -5,6 +5,8 @@ import com.aivle08.big_project_api.dto.response.PostResponseDTO;
 import com.aivle08.big_project_api.model.Post;
 import com.aivle08.big_project_api.model.Users;
 import com.aivle08.big_project_api.repository.PostRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -45,6 +47,10 @@ public class PostService {
 
         List<Post> posts = postRepository.findByAuthor_Company(usersService.getCurrentUser().getCompany());
 
+        if (posts.isEmpty()) {
+            throw new EntityNotFoundException("No posts found for company " + usersService.getCurrentUser().getCompany());
+        }
+
         List<PostResponseDTO> postDTOs = posts.stream()
                 .map(PostResponseDTO::fromEntity)
                 .collect(Collectors.toList());
@@ -54,13 +60,13 @@ public class PostService {
 
     public PostResponseDTO getPostById(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("게시글이 존재하지 않습니다."));
         return PostResponseDTO.fromEntity(post);
     }
 
     public PostResponseDTO updatePost(Long id, PostRequestDTO requestDto) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("게시글이 존재하지 않습니다."));
 
         Post updatedPost = Post.builder()
                 .id(post.getId())
@@ -79,10 +85,10 @@ public class PostService {
 
     public void deletePost(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("게시글이 존재하지 않습니다."));
 
         if (post.getAuthor().getId().equals(usersService.getCurrentUser().getId())) {
             postRepository.deleteById(id);
-        } else throw new RuntimeException("해당 게시글에 접근할 수 없습니다.");
+        } else throw new AccessDeniedException("해당 게시글을 수정하거나 삭제할 권한이 없습니다.");
     }
 }

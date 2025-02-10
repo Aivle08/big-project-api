@@ -6,8 +6,8 @@ import com.aivle08.big_project_api.model.Recruitment;
 import com.aivle08.big_project_api.repository.ApplicantRepository;
 import com.aivle08.big_project_api.repository.RecruitmentRepository;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
+import com.amazonaws.util.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -86,5 +86,14 @@ public class S3Service {
         }
 
         return storedFiles;
+    }
+
+    public byte[] getPdfFile(String fileName) {
+        S3Object s3Object = s3Client.getObject(new GetObjectRequest(bucketName, fileName));
+        try (S3ObjectInputStream inputStream = s3Object.getObjectContent()) {
+            return IOUtils.toByteArray(inputStream);
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading S3 file: " + fileName, e);
+        }
     }
 }

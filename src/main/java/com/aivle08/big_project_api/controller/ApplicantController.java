@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -79,4 +80,25 @@ public class ApplicantController {
                 .body(response);
     }
 
+    @Operation(summary = "PDF 파일 불러오기", description = "지원자 아이디에 해당하는 이력서 PDF를 가져옵니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "파일 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "500", description = "서버 오류 발생")
+    })
+    @GetMapping(value = "/applicant/{applicant-id}/pdf")
+    public ResponseEntity<byte[]> getResumePDF(@PathVariable Long id,
+                                               @PathVariable(name = "applicant-id") Long applicantId) {
+        ApplicantResponseDTO applicantResponse = applicantService.getApplicantById(applicantId);
+        if (applicantResponse == null || applicantResponse.getFileName() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        String fileName = applicantResponse.getFileName();
+        byte[] fileContent = s3Service.getPdfFile(fileName);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(fileContent);
+    }
 }

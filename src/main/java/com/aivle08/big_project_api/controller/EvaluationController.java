@@ -2,7 +2,6 @@ package com.aivle08.big_project_api.controller;
 
 import com.aivle08.big_project_api.dto.request.ApplicantRequestDTO;
 import com.aivle08.big_project_api.dto.response.EvaluationResponseDTO;
-import com.aivle08.big_project_api.service.ApplicantService;
 import com.aivle08.big_project_api.service.EvaluationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,11 +19,9 @@ import java.util.List;
 public class EvaluationController {
 
     private final EvaluationService evaluationService;
-    private final ApplicantService applicantService;
 
-    public EvaluationController(EvaluationService evaluationService, ApplicantService applicantService) {
+    public EvaluationController(EvaluationService evaluationService) {
         this.evaluationService = evaluationService;
-        this.applicantService = applicantService;
     }
 
     @Operation(summary = "지원자 평가조회")
@@ -45,7 +42,7 @@ public class EvaluationController {
             @ApiResponse(responseCode = "400", description = ""),
     })
     @GetMapping("/applicants")
-    public ResponseEntity<?> getEvaluationList(@PathVariable Long recruitmentId,
+    public ResponseEntity<List<EvaluationResponseDTO>> getEvaluationList(@PathVariable Long recruitmentId,
                                                @RequestParam(name = "passed", defaultValue = "false") boolean passed) {
         if (passed) {
             return ResponseEntity.ok(evaluationService.getPassedApplicantList(recruitmentId));
