@@ -44,7 +44,7 @@ public class EvaluationService {
             throw new IllegalArgumentException("ApplicantId가 없습니다.");
         }
 
-        String applicationName = applicantRepository.findById(applicantId)
+        String applicantName = applicantRepository.findById(applicantId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid applicantId")).getName();
 
         List<EvaluationDetailResponseDTO> scoreDetails = evaluationScoreRepository.findByApplicantId(applicantId)
@@ -59,8 +59,9 @@ public class EvaluationService {
                 .toList();
 
         return EvaluationResponseDTO.builder()
+                .applicantId(applicantId)
                 .recruitmentTitle(recruitmentTitle)
-                .applicationName(applicationName)
+                .applicantName(applicantName)
                 .scoreDetails(scoreDetails)
                 .build();
     }
@@ -90,7 +91,7 @@ public class EvaluationService {
 
             EvaluationResponseDTO evaluationResponseDTO = EvaluationResponseDTO.builder()
                     .recruitmentTitle(recruitmentTitle)
-                    .applicationName(applicant.getName())
+                    .applicantName(applicant.getName())
                     .scoreDetails(scoreDetails)
                     .applicantId(applicant.getId())
                     .build();
@@ -121,8 +122,9 @@ public class EvaluationService {
 
             allList.add(EvaluationResponseDTO.builder()
                     .recruitmentTitle(recruitmentTitle)
-                    .applicationName(applicant.getName())
+                    .applicantName(applicant.getName())
                     .scoreDetails(scoreDetails)
+                    .applicantId(applicant.getId())
                     .build());
         }
 
