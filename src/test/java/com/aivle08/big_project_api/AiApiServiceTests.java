@@ -23,7 +23,6 @@ public class AiApiServiceTests {
 
         ApiResponseDTO<QuestionResponseDTO> dto = apiService.callQuestionApi(questionRequestDTO, "tech");
 
-        System.out.println(dto.getItem().getFinalQuestion().get(0));
 
     }
 }

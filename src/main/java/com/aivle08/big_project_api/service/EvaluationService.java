@@ -6,9 +6,9 @@ import com.aivle08.big_project_api.dto.response.EvaluationResponseDTO;
 import com.aivle08.big_project_api.model.Applicant;
 import com.aivle08.big_project_api.model.EvaluationScore;
 import com.aivle08.big_project_api.repository.ApplicantRepository;
-import com.aivle08.big_project_api.repository.EvaluationDetailRepository;
 import com.aivle08.big_project_api.repository.EvaluationScoreRepository;
 import com.aivle08.big_project_api.repository.RecruitmentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +23,12 @@ public class EvaluationService {
     private final ApplicantService applicantService;
     private final RecruitmentRepository recruitmentRepository;
     private final ApplicantRepository applicantRepository;
-    private final EvaluationDetailRepository evaluationDetailRepository;
 
-    public EvaluationService(EvaluationScoreRepository evaluationScoreRepository, ApplicantService applicantService, RecruitmentRepository recruitmentRepository, ApplicantRepository applicantRepository, EvaluationDetailRepository evaluationDetailRepository) {
+    public EvaluationService(EvaluationScoreRepository evaluationScoreRepository, ApplicantService applicantService, RecruitmentRepository recruitmentRepository, ApplicantRepository applicantRepository) {
         this.evaluationScoreRepository = evaluationScoreRepository;
         this.applicantService = applicantService;
         this.recruitmentRepository = recruitmentRepository;
         this.applicantRepository = applicantRepository;
-        this.evaluationDetailRepository = evaluationDetailRepository;
     }
 
     public EvaluationResponseDTO getScoreListByApplicantIdAndRecruitmentId(Long recruitmentId, Long applicantId) {
@@ -41,11 +39,12 @@ public class EvaluationService {
         List<Long> applicantIds = applicantService.getApplicantIdListByRecruitmentId(recruitmentId);
 
         if (!applicantIds.contains(applicantId)) {
-            throw new IllegalArgumentException("ApplicantId가 없습니다.");
+            throw new IllegalArgumentException("해당 지원자는 채용 공고에 포함되지 않습니다. applicantId: " + applicantId);
         }
 
         String applicationName = applicantRepository.findById(applicantId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid applicantId")).getName();
+                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 지원자를 찾을 수 없습니다. ID: " + applicantId))
+                .getName();
 
         List<EvaluationDetailResponseDTO> scoreDetails = evaluationScoreRepository.findByApplicantId(applicantId)
                 .stream()
@@ -67,9 +66,8 @@ public class EvaluationService {
 
     public List<EvaluationResponseDTO> getPassedApplicantList(Long recruitmentId) {
 
-        String recruitmentTitle = recruitmentRepository.findById(recruitmentId)
-                .map(r -> r.getTitle())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid recruitmentId"));
+        String recruitmentTitle = recruitmentRepository.findById(recruitmentId).orElseThrow(() -> new IllegalArgumentException("Invalid recruitmentId")).getTitle();
+
 
         List<Applicant> passedApplicants = applicantRepository.findAllByResumeResultAndRecruitmentId(true, recruitmentId);
 
@@ -105,10 +103,15 @@ public class EvaluationService {
         String recruitmentTitle = recruitmentRepository.findById(recruitmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid recruitmentId")).getTitle();
 
-        List<Applicant> passedApplicants = applicantRepository.findByRecruitmentId(recruitmentId);
+        List<Applicant> allApplicants = applicantRepository.findByRecruitmentId(recruitmentId);
+
+        if(allApplicants.isEmpty()) {
+            throw new EntityNotFoundException("해당 채용 공고(ID: " + recruitmentId + ")에 지원한 지원자가 없습니다.");
+        }
+
 
         List<EvaluationResponseDTO> allList = new ArrayList<>();
-        for (Applicant applicant : passedApplicants) {
+        for (Applicant applicant : allApplicants) {
             List<EvaluationDetailResponseDTO> scoreDetails = new ArrayList<>();
 
             for (EvaluationScore evaluationScore : applicant.getEvaluationScoreList()) {
@@ -123,6 +126,7 @@ public class EvaluationService {
                     .recruitmentTitle(recruitmentTitle)
                     .applicationName(applicant.getName())
                     .scoreDetails(scoreDetails)
+                    .applicantId(applicant.getId())
                     .build());
         }
 
