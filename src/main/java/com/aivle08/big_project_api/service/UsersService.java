@@ -9,6 +9,7 @@ import com.aivle08.big_project_api.repository.CompanyRepository;
 import com.aivle08.big_project_api.repository.DepartmentRepository;
 import com.aivle08.big_project_api.repository.UsersRepository;
 import com.aivle08.big_project_api.util.JwtTokenUtil;
+import com.aivle08.big_project_api.util.PasswordValidator;
 import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -56,6 +57,11 @@ public class UsersService {
 
         if (!user.isVerifiedEmail()) {
             throw new IllegalArgumentException("The email address is not verified.");
+        }
+
+        // **비밀번호 검증 추가**
+        if (!PasswordValidator.isValid(registerRequestDTO.getPassword())) {
+            throw new IllegalArgumentException("Invalid password. Password must be at least 8 characters long and include letters, numbers, and special characters.");
         }
 
         String encodedPassword = passwordEncoder.encode(registerRequestDTO.getPassword());
