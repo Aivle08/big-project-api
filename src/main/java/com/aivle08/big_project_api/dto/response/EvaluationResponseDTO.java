@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 public class EvaluationResponseDTO {
     private String recruitmentTitle;
-    private String applicationName;
+    private String applicantName;
     private Long applicantId;
 
     private List<EvaluationDetailResponseDTO> scoreDetails;
