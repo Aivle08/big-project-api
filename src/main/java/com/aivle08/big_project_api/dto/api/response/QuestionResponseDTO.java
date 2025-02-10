@@ -2,6 +2,7 @@ package com.aivle08.big_project_api.dto.api.response;
 
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -11,5 +12,5 @@ import java.util.List;
 @Builder
 public class QuestionResponseDTO {
     private QuestionContentDTO question;
-    private List<String> chunk;
+    private List<String> chunk = new ArrayList<>();
 }

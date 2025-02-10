@@ -194,14 +194,22 @@ public class ApiPipeService {
                 .job(job)
                 .companyId(companyId)
                 .applicantId(applicantId)
-//                .evaluation()
                 .build();
         QuestionResponseDTO techQuestionResponseDTO = apiService.callQuestionApi(techQuestionRequestDTO, "tech").getItem();
-        QuestionListResponseDTO techQuestionListResponseDTO = QuestionListResponseDTO.builder()
-                .title("직무")
-                .chunk(techQuestionResponseDTO.getChunk())
-                .finalQuestion(techQuestionResponseDTO.getQuestion().getFinalQuestion())
-                .build();
+        QuestionListResponseDTO techQuestionListResponseDTO;
+        if(techQuestionResponseDTO.getQuestion() == null){
+            techQuestionListResponseDTO = QuestionListResponseDTO.builder()
+                    .title("직무")
+                    .finalQuestion(List.of("재귀한도 초과로 인한 질문생성 불가"))
+                    .build();
+        }else {
+            techQuestionListResponseDTO = QuestionListResponseDTO.builder()
+                    .title("직무")
+                    .chunk(techQuestionResponseDTO.getChunk())
+                    .finalQuestion(techQuestionResponseDTO.getQuestion().getFinalQuestion())
+                    .build();
+        }
+
 
         // 경험 중심 질문 생성
         Optional<String> experienceDetail = evaluations.stream()
@@ -217,11 +225,19 @@ public class ApiPipeService {
                 .evaluation(experienceEvaluation)
                 .build();
         QuestionResponseDTO experienceQuestionResponseDTO = apiService.callQuestionApi(experienceQuestionRequestDTO, "experience").getItem();
-        QuestionListResponseDTO experienceQuestionListResponseDTO = QuestionListResponseDTO.builder()
-                .title("경험")
-                .chunk(experienceQuestionResponseDTO.getChunk())
-                .finalQuestion(experienceQuestionResponseDTO.getQuestion().getFinalQuestion())
-                .build();
+        QuestionListResponseDTO experienceQuestionListResponseDTO;
+        if(experienceQuestionResponseDTO.getQuestion() == null){
+            experienceQuestionListResponseDTO = QuestionListResponseDTO.builder()
+                    .title("직무")
+                    .finalQuestion(List.of("재귀한도 초과로 인한 질문생성 불가"))
+                    .build();
+        }else {
+            experienceQuestionListResponseDTO = QuestionListResponseDTO.builder()
+                    .title("직무")
+                    .chunk(experienceQuestionResponseDTO.getChunk())
+                    .finalQuestion(experienceQuestionResponseDTO.getQuestion().getFinalQuestion())
+                    .build();
+        }
 
         // 일 중심 질문 생성
         Optional<String> workDetail = evaluations.stream()
@@ -237,11 +253,19 @@ public class ApiPipeService {
                 .evaluation(workEvaluation)
                 .build();
         QuestionResponseDTO workQuestionResponseDTO = apiService.callQuestionApi(workQuestionRequestDTO, "work").getItem();
-        QuestionListResponseDTO workQuestionListResponseDTO = QuestionListResponseDTO.builder()
-                .title("일")
-                .chunk(workQuestionResponseDTO.getChunk())
-                .finalQuestion(workQuestionResponseDTO.getQuestion().getFinalQuestion())
-                .build();
+        QuestionListResponseDTO workQuestionListResponseDTO;
+        if(workQuestionResponseDTO.getQuestion() == null){
+            workQuestionListResponseDTO = QuestionListResponseDTO.builder()
+                    .title("일")
+                    .finalQuestion(List.of("재귀한도 초과로 인한 질문생성 불가"))
+                    .build();
+        }else {
+            workQuestionListResponseDTO = QuestionListResponseDTO.builder()
+                    .title("일")
+                    .chunk(workQuestionResponseDTO.getChunk())
+                    .finalQuestion(workQuestionResponseDTO.getQuestion().getFinalQuestion())
+                    .build();
+        }
 
         List<QuestionListResponseDTO> questionListResponseDTOList = List.of(techQuestionListResponseDTO, experienceQuestionListResponseDTO, workQuestionListResponseDTO);
 
