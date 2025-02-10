@@ -4,6 +4,7 @@ import com.aivle08.big_project_api.constants.ProcessingStatus;
 import com.aivle08.big_project_api.dto.request.RecruitmentRequestDTO;
 import com.aivle08.big_project_api.dto.response.RecruitmentResponseDTO;
 import com.aivle08.big_project_api.repository.RecruitmentRepository;
+import com.aivle08.big_project_api.service.ApiPipeService;
 import com.aivle08.big_project_api.service.RecruitmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,10 +22,12 @@ public class RecruitmentController {
 
     private final RecruitmentService recruitmentService;
     private final RecruitmentRepository recruitmentRepository;
+    private final ApiPipeService apiPipeService;
 
-    public RecruitmentController(RecruitmentService recruitmentService, RecruitmentRepository recruitmentRepository) {
+    public RecruitmentController(RecruitmentService recruitmentService, RecruitmentRepository recruitmentRepository, ApiPipeService apiPipeService) {
         this.recruitmentService = recruitmentService;
         this.recruitmentRepository = recruitmentRepository;
+        this.apiPipeService = apiPipeService;
     }
 
     @GetMapping
@@ -46,6 +49,7 @@ public class RecruitmentController {
     })
     public ResponseEntity<RecruitmentResponseDTO> createRecruitment(@RequestBody RecruitmentRequestDTO recruitmentRequestDTO) {
         RecruitmentResponseDTO recruitmentResponseDTO = recruitmentService.createRecruitment(recruitmentRequestDTO);
+        apiPipeService.inserdetailPipe(recruitmentResponseDTO.getId());
         return ResponseEntity.ok()
                 .body(recruitmentResponseDTO);
     }
