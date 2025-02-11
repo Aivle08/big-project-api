@@ -52,7 +52,7 @@ public class UsersService {
         Users user = usersRepository.findByEmail(registerRequestDTO.getEmail()).orElse(null);
 
         if (user == null) {
-            throw new IllegalArgumentException("The username already exists.");
+            throw new IllegalArgumentException("The email address is not verified.");
         }
 
         if (!user.isVerifiedEmail()) {
@@ -74,17 +74,15 @@ public class UsersService {
                     return companyRepository.save(newCompany);
                 });
 
-        //todo: 여기 회사 예외처리 반드시 필요함!
-//        Department department = departmentRepository.findByNameAndCompany(registerInputDTO.getDepartmentName(), company)
-//                .orElseGet(() -> {
-//                    Department newDepartment = new Department(null, registerInputDTO.getDepartmentName(), company, null, null);
-//                    return departmentRepository.save(newDepartment);
-//                });
+        Department department = departmentRepository.findByNameAndCompany(registerRequestDTO.getDepartmentName(), company)
+                .orElseGet(() -> {
+                    Department newDepartment = Department.builder()
+                        .name(registerRequestDTO.getDepartmentName())
+                        .company(company)
+                        .build();
+                    return departmentRepository.save(newDepartment);
+                });
 
-        Department department = Department.builder()
-                .name(registerRequestDTO.getDepartmentName())
-                .company(company)
-                .build();
         departmentRepository.save(department);
 
 
@@ -132,19 +130,26 @@ public class UsersService {
 
     public void initiateEmailRegistration(String email) {
         // 1) 이메일 중복 확인
-        if (usersRepository.findByEmail(email).isPresent()) {
-            throw new IllegalArgumentException("Email already in use.");
+        Users user = usersRepository.findByEmail(email).orElse(null);
+        if (user != null) {
+            if(user.getVerificationToken() == null) {
+                throw new IllegalArgumentException("Email already in use.");
+            }
         }
 
-        // 토큰 생성 (UUID 등)
         String token = UUID.randomUUID().toString();
-        Users tempUser = Users.builder()
-                .email(email)
-                .verifiedEmail(false)
-                .verificationToken(token)
-                .build();
 
-        usersRepository.save(tempUser);
+        if(user == null) {
+            Users tempUser = Users.builder()
+                    .email(email)
+                    .verifiedEmail(false)
+                    .verificationToken(token)
+                    .build();
+
+            usersRepository.save(tempUser);
+        }else{
+            token = user.getVerificationToken();
+        }
 
         // 3) 이메일 전송
         emailService.sendVerificationEmail(email, token);
