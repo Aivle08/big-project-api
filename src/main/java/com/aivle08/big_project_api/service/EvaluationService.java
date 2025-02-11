@@ -42,7 +42,7 @@ public class EvaluationService {
             throw new IllegalArgumentException("해당 지원자는 채용 공고에 포함되지 않습니다. applicantId: " + applicantId);
         }
 
-        String applicationName = applicantRepository.findById(applicantId)
+        String applicantName = applicantRepository.findById(applicantId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 지원자를 찾을 수 없습니다. ID: " + applicantId))
                 .getName();
 
