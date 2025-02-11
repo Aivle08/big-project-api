@@ -77,9 +77,9 @@ public class UsersService {
         Department department = departmentRepository.findByNameAndCompany(registerRequestDTO.getDepartmentName(), company)
                 .orElseGet(() -> {
                     Department newDepartment = Department.builder()
-                        .name(registerRequestDTO.getDepartmentName())
-                        .company(company)
-                        .build();
+                            .name(registerRequestDTO.getDepartmentName())
+                            .company(company)
+                            .build();
                     return departmentRepository.save(newDepartment);
                 });
 
@@ -132,14 +132,14 @@ public class UsersService {
         // 1) 이메일 중복 확인
         Users user = usersRepository.findByEmail(email).orElse(null);
         if (user != null) {
-            if(user.getVerificationToken() == null) {
+            if (user.getVerificationToken() == null) {
                 throw new IllegalArgumentException("Email already in use.");
             }
         }
 
         String token = UUID.randomUUID().toString();
 
-        if(user == null) {
+        if (user == null) {
             Users tempUser = Users.builder()
                     .email(email)
                     .verifiedEmail(false)
@@ -147,7 +147,7 @@ public class UsersService {
                     .build();
 
             usersRepository.save(tempUser);
-        }else{
+        } else {
             token = user.getVerificationToken();
         }
 

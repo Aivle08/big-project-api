@@ -4,6 +4,7 @@ import com.aivle08.big_project_api.model.ResumeRetriever;
 import com.aivle08.big_project_api.repository.ApplicantRepository;
 import com.aivle08.big_project_api.repository.ResumeRetrieverRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service

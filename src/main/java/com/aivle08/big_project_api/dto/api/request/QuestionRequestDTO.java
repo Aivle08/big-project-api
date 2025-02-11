@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class QuestionRequestDTO
-{
+public class QuestionRequestDTO {
     private String job;
     @JsonProperty("company_id")
     private Long companyId;

@@ -1,7 +1,16 @@
 package com.aivle08.big_project_api.constants;
 
-//todo: 배포 이전 제거 예정
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
 public class SecurityConstants {
-    public static final String JWT_KEY = "jxgEQeXHuPq8VdbyYFNkANdudQ53YUn4";
+
+    public static String JWT_KEY;
     public static final String JWT_HEADER = "Authorization";
+
+    @Value("${jwt.secret}")
+    public void setJwtKey(String jwtKey) {
+        JWT_KEY = jwtKey;
+    }
 }

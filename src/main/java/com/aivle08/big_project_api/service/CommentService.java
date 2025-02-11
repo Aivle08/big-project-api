@@ -71,7 +71,7 @@ public class CommentService {
 
         Comment saveUpdateComment = commentRepository.save(updateComment);
 
-        return  CommentResponseDTO.fromEntity(saveUpdateComment);
+        return CommentResponseDTO.fromEntity(saveUpdateComment);
     }
 
     public void deleteComment(Long id) {

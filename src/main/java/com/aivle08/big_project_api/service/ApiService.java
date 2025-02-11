@@ -22,7 +22,7 @@ public class ApiService {
     private final WebClient webClient;
 
     public ApiService(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:8000").build();
+        this.webClient = webClientBuilder.baseUrl("http://ai-api:8000").build();
     }
 
     public ApiResponseDTO<Void> callInsertResumeApi(PdfInfoListRequestDTO requestDTO) {
@@ -31,7 +31,8 @@ public class ApiService {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(requestDTO)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<Void>>() {});
+                .bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<Void>>() {
+                });
         return responseMono.block();
     }
 
@@ -44,7 +45,8 @@ public class ApiService {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(requestBody)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<ExtractionResponseDTO>>() {});
+                .bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<ExtractionResponseDTO>>() {
+                });
 
         return responseMono.block();
     }
@@ -55,7 +57,8 @@ public class ApiService {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(requestDTO)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<QuestionResponseDTO>>() {});
+                .bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<QuestionResponseDTO>>() {
+                });
         return responseMono.block();
     }
 
@@ -65,7 +68,8 @@ public class ApiService {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(requestDTO)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<ScoreResponseDTO>>() {});
+                .bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<ScoreResponseDTO>>() {
+                });
         return responseMono.block();
     }
 
@@ -75,7 +79,8 @@ public class ApiService {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(requestDTO)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<Void>>() {});
+                .bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<Void>>() {
+                });
         return responseMono.block();
     }
 

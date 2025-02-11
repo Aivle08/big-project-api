@@ -106,7 +106,7 @@ public class EvaluationService {
 
         List<Applicant> allApplicants = applicantRepository.findByRecruitmentId(recruitmentId);
 
-        if(allApplicants.isEmpty()) {
+        if (allApplicants.isEmpty()) {
             throw new EntityNotFoundException("해당 채용 공고(ID: " + recruitmentId + ")에 지원한 지원자가 없습니다.");
         }
 

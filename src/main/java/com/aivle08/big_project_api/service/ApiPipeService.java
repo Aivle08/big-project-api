@@ -130,7 +130,7 @@ public class ApiPipeService {
                     .build();
             EvaluationDetail sed = evaluationDetailRepository.save(ed);
 
-            for(String s : dto.getChunk()){
+            for (String s : dto.getChunk()) {
                 ResumeRetriever rr = ResumeRetriever.builder()
                         .chunk(s)
                         .applicant(e.getApplicant())
@@ -166,13 +166,13 @@ public class ApiPipeService {
             }
         }
 
-         //각 지원자별 요약 API 호출 및 업데이트를 비동기로 처리
+        //각 지원자별 요약 API 호출 및 업데이트를 비동기로 처리
         List<CompletableFuture<Void>> futures = savedEvaluationScoreList.stream()
-                .map( se -> applicantProcessingService.processEvaluationScoreAsync(se, recruitment.getJob()))
+                .map(se -> applicantProcessingService.processEvaluationScoreAsync(se, recruitment.getJob()))
 //                .map( se -> applicantProcessingService.processApplicantScore(se, recruitment.getJob()))
                 .collect(Collectors.toList());
 
-         //모든 비동기 작업이 완료될 때까지 대기 (필요에 따라 timeout 등 추가 고려)
+        //모든 비동기 작업이 완료될 때까지 대기 (필요에 따라 timeout 등 추가 고려)
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
     }
@@ -197,12 +197,12 @@ public class ApiPipeService {
                 .build();
         QuestionResponseDTO techQuestionResponseDTO = apiService.callQuestionApi(techQuestionRequestDTO, "tech").getItem();
         QuestionListResponseDTO techQuestionListResponseDTO;
-        if(techQuestionResponseDTO.getQuestion() == null){
+        if (techQuestionResponseDTO.getQuestion() == null) {
             techQuestionListResponseDTO = QuestionListResponseDTO.builder()
                     .title("직무")
                     .finalQuestion(List.of("재귀한도 초과로 인한 질문생성 불가"))
                     .build();
-        }else {
+        } else {
             techQuestionListResponseDTO = QuestionListResponseDTO.builder()
                     .title("직무")
                     .chunk(techQuestionResponseDTO.getChunk())
@@ -213,7 +213,7 @@ public class ApiPipeService {
 
         // 경험 중심 질문 생성
         Optional<String> experienceDetail = evaluations.stream()
-                .filter(evaluation -> "실력".equals(evaluation.getItem()))
+                .filter(evaluation -> "채용 공고".equals(evaluation.getItem()))
                 .map(Evaluation::getDetail)
                 .findFirst();
         String experienceEvaluation = experienceDetail.orElse(null);
@@ -226,12 +226,12 @@ public class ApiPipeService {
                 .build();
         QuestionResponseDTO experienceQuestionResponseDTO = apiService.callQuestionApi(experienceQuestionRequestDTO, "experience").getItem();
         QuestionListResponseDTO experienceQuestionListResponseDTO;
-        if(experienceQuestionResponseDTO.getQuestion() == null){
+        if (experienceQuestionResponseDTO.getQuestion() == null) {
             experienceQuestionListResponseDTO = QuestionListResponseDTO.builder()
                     .title("직무")
                     .finalQuestion(List.of("재귀한도 초과로 인한 질문생성 불가"))
                     .build();
-        }else {
+        } else {
             experienceQuestionListResponseDTO = QuestionListResponseDTO.builder()
                     .title("직무")
                     .chunk(experienceQuestionResponseDTO.getChunk())
@@ -241,7 +241,7 @@ public class ApiPipeService {
 
         // 일 중심 질문 생성
         Optional<String> workDetail = evaluations.stream()
-                .filter(evaluation -> "역량".equals(evaluation.getItem()))
+                .filter(evaluation -> "채용 공고".equals(evaluation.getItem()))
                 .map(Evaluation::getDetail)
                 .findFirst();
         String workEvaluation = workDetail.orElse(null);
@@ -254,12 +254,12 @@ public class ApiPipeService {
                 .build();
         QuestionResponseDTO workQuestionResponseDTO = apiService.callQuestionApi(workQuestionRequestDTO, "work").getItem();
         QuestionListResponseDTO workQuestionListResponseDTO;
-        if(workQuestionResponseDTO.getQuestion() == null){
+        if (workQuestionResponseDTO.getQuestion() == null) {
             workQuestionListResponseDTO = QuestionListResponseDTO.builder()
                     .title("일")
                     .finalQuestion(List.of("재귀한도 초과로 인한 질문생성 불가"))
                     .build();
-        }else {
+        } else {
             workQuestionListResponseDTO = QuestionListResponseDTO.builder()
                     .title("일")
                     .chunk(workQuestionResponseDTO.getChunk())

@@ -1,9 +1,9 @@
 package com.aivle08.big_project_api.dto.response;
 
-import com.aivle08.big_project_api.model.Comment;
 import com.aivle08.big_project_api.model.Post;
 import com.aivle08.big_project_api.model.Users;
 import lombok.Getter;
+
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;

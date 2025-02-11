@@ -58,8 +58,7 @@ public class UsersController {
         Users user = usersService.getCurrentUser();
         return ResponseEntity.ok().body(user);
     }
-
-
+    
     @GetMapping("/check-username")
     @Operation(summary = "아이디 중복 확인")
     @ApiResponses({

@@ -29,7 +29,7 @@ public class RecruitmentController {
         this.recruitmentRepository = recruitmentRepository;
         this.apiPipeService = apiPipeService;
     }
-
+ 
     @GetMapping
     @Operation(summary = "채용 공고 리스트 조회")
     @ApiResponses({

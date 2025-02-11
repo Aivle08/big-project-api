@@ -28,12 +28,11 @@ public class CommentController {
             @ApiResponse(responseCode = "200", description = "댓글 조회 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<List<CommentResponseDTO>> getComment(@PathVariable Long id){
+    public ResponseEntity<List<CommentResponseDTO>> getComment(@PathVariable Long id) {
         List<CommentResponseDTO> commentResponseDTOList = commentService.getCommentList(id);
         return ResponseEntity.ok(commentResponseDTOList);
     }
-
-
+    
     @PostMapping
     @Operation(summary = "댓글 저장")
     @ApiResponses({
@@ -45,15 +44,14 @@ public class CommentController {
         return ResponseEntity.ok(commentResponseDTO);
     }
 
-
     @PutMapping({"/{comment-id}"})
     @Operation(summary = "댓글 수정")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "댓글 수정 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    public ResponseEntity<CommentResponseDTO> updateComment(@PathVariable Long id,@PathVariable(name = "comment-id") Long commentId,
-                                                            @RequestBody CommentRequestDTO commentRequestDTO){
+    public ResponseEntity<CommentResponseDTO> updateComment(@PathVariable Long id, @PathVariable(name = "comment-id") Long commentId,
+                                                            @RequestBody CommentRequestDTO commentRequestDTO) {
         CommentResponseDTO commentResponseDTO = commentService.updateComment(commentId, commentRequestDTO);
         return ResponseEntity.ok(commentResponseDTO);
     }

@@ -1,10 +1,6 @@
 package com.aivle08.big_project_api.dto.request;
 
-import com.aivle08.big_project_api.dto.response.EvaluationDetailResponseDTO;
-import com.aivle08.big_project_api.model.EvaluationScore;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter

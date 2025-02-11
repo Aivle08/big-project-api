@@ -22,7 +22,7 @@ public class PostController {
     public PostController(PostService postService) {
         this.postService = postService;
     }
-
+ 
     @PostMapping
     @Operation(summary = "게시글 생성")
     @ApiResponses({

@@ -25,7 +25,7 @@ public class ApplicantService {
     public List<ApplicantResponseDTO> getApplicantListByRecruitmentId(Long recruitmentId) {
         List<Applicant> applicants = applicantRepository.findByRecruitmentId(recruitmentId);
 
-        if(applicants.isEmpty()) {
+        if (applicants.isEmpty()) {
             throw new EntityNotFoundException("해당 채용 공고(ID: " + recruitmentId + ")에 지원한 지원자가 없습니다.");
         }
 
@@ -37,7 +37,7 @@ public class ApplicantService {
     public List<Long> getApplicantIdListByRecruitmentId(Long recruitmentId) {
         List<Applicant> applicants = applicantRepository.findByRecruitmentId(recruitmentId);
 
-        if(applicants.isEmpty()) {
+        if (applicants.isEmpty()) {
             throw new EntityNotFoundException("해당 채용 공고(ID: " + recruitmentId + ")에 지원한 지원자가 없습니다.");
         }
 

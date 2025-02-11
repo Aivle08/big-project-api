@@ -19,7 +19,7 @@ public class UsersDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        if(user == null) {
+        if (user == null) {
             return null;
         }
         return user.getPassword();
@@ -27,7 +27,7 @@ public class UsersDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        if(user == null) {
+        if (user == null) {
             return null;
         }
         return user.getUsername();

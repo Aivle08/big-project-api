@@ -43,11 +43,10 @@ public class EvaluationController {
     })
     @GetMapping("/applicants")
     public ResponseEntity<List<EvaluationResponseDTO>> getEvaluationList(@PathVariable Long recruitmentId,
-                                               @RequestParam(name = "passed", defaultValue = "false") boolean passed) {
+                                                                         @RequestParam(name = "passed", defaultValue = "false") boolean passed) {
         if (passed) {
             return ResponseEntity.ok(evaluationService.getPassedApplicantList(recruitmentId));
-        }
-        else {
+        } else {
             return ResponseEntity.ok(evaluationService.getApplicantEvaluationList(recruitmentId));
         }
     }
