@@ -30,12 +30,9 @@ public class UsersController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
     public ResponseEntity<String> registerUser(@RequestBody RegisterRequestDTO registerRequestDTO) {
-        try {
-            usersService.registerUser(registerRequestDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-        }
+        System.out.println("register start");
+        usersService.registerUser(registerRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }
 
     @PostMapping("/login")
