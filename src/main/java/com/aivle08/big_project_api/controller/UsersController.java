@@ -30,6 +30,7 @@ public class UsersController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
     public ResponseEntity<String> registerUser(@RequestBody RegisterRequestDTO registerRequestDTO) {
+        System.out.println("register start");
         usersService.registerUser(registerRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }

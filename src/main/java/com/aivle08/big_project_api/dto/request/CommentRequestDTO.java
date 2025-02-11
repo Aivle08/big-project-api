@@ -1,7 +1,6 @@
 package com.aivle08.big_project_api.dto.request;
 
 import com.aivle08.big_project_api.model.Comment;
-import com.aivle08.big_project_api.model.Users;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,7 +9,6 @@ import lombok.Getter;
 public class CommentRequestDTO {
 
     private String content;
-
 
     public static CommentRequestDTO fromEntity(Comment comment) {
         return CommentRequestDTO.builder()

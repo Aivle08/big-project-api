@@ -9,6 +9,7 @@ import com.aivle08.big_project_api.repository.CompanyRepository;
 import com.aivle08.big_project_api.repository.DepartmentRepository;
 import com.aivle08.big_project_api.repository.UsersRepository;
 import com.aivle08.big_project_api.util.JwtTokenUtil;
+import com.aivle08.big_project_api.util.PasswordValidator;
 import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,11 +52,16 @@ public class UsersService {
         Users user = usersRepository.findByEmail(registerRequestDTO.getEmail()).orElse(null);
 
         if (user == null) {
-            throw new IllegalArgumentException("The username already exists.");
+            throw new IllegalArgumentException("The email address is not verified.");
         }
 
         if (!user.isVerifiedEmail()) {
             throw new IllegalArgumentException("The email address is not verified.");
+        }
+
+        // **비밀번호 검증 추가**
+        if (!PasswordValidator.isValid(registerRequestDTO.getPassword())) {
+            throw new IllegalArgumentException("Invalid password. Password must be at least 8 characters long and include letters, numbers, and special characters.");
         }
 
         String encodedPassword = passwordEncoder.encode(registerRequestDTO.getPassword());
@@ -68,17 +74,15 @@ public class UsersService {
                     return companyRepository.save(newCompany);
                 });
 
-        //todo: 여기 회사 예외처리 반드시 필요함!
-//        Department department = departmentRepository.findByNameAndCompany(registerInputDTO.getDepartmentName(), company)
-//                .orElseGet(() -> {
-//                    Department newDepartment = new Department(null, registerInputDTO.getDepartmentName(), company, null, null);
-//                    return departmentRepository.save(newDepartment);
-//                });
+        Department department = departmentRepository.findByNameAndCompany(registerRequestDTO.getDepartmentName(), company)
+                .orElseGet(() -> {
+                    Department newDepartment = Department.builder()
+                        .name(registerRequestDTO.getDepartmentName())
+                        .company(company)
+                        .build();
+                    return departmentRepository.save(newDepartment);
+                });
 
-        Department department = Department.builder()
-                .name(registerRequestDTO.getDepartmentName())
-                .company(company)
-                .build();
         departmentRepository.save(department);
 
 
@@ -126,19 +130,26 @@ public class UsersService {
 
     public void initiateEmailRegistration(String email) {
         // 1) 이메일 중복 확인
-        if (usersRepository.findByEmail(email).isPresent()) {
-            throw new IllegalArgumentException("Email already in use.");
+        Users user = usersRepository.findByEmail(email).orElse(null);
+        if (user != null) {
+            if(user.getVerificationToken() == null) {
+                throw new IllegalArgumentException("Email already in use.");
+            }
         }
 
-        // 토큰 생성 (UUID 등)
         String token = UUID.randomUUID().toString();
-        Users tempUser = Users.builder()
-                .email(email)
-                .verifiedEmail(false)
-                .verificationToken(token)
-                .build();
 
-        usersRepository.save(tempUser);
+        if(user == null) {
+            Users tempUser = Users.builder()
+                    .email(email)
+                    .verifiedEmail(false)
+                    .verificationToken(token)
+                    .build();
+
+            usersRepository.save(tempUser);
+        }else{
+            token = user.getVerificationToken();
+        }
 
         // 3) 이메일 전송
         emailService.sendVerificationEmail(email, token);

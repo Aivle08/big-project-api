@@ -48,7 +48,7 @@ public class PostService {
         List<Post> posts = postRepository.findByAuthor_Company(usersService.getCurrentUser().getCompany());
 
         if (posts.isEmpty()) {
-            throw new EntityNotFoundException("No posts found for company " + usersService.getCurrentUser().getCompany());
+            throw new EntityNotFoundException("해당 회사에 대한 게시글을 찾을 수 없습니다: " + usersService.getCurrentUser().getCompany());
         }
 
         List<PostResponseDTO> postDTOs = posts.stream()

@@ -101,6 +101,30 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.internalServerError().body(response);
     }
 
+    // 6. 비밀번호 검증 실패 (400)
+    @ExceptionHandler(PasswordValidationException.class)
+    public ResponseEntity<ResponseDTO<Void>> handlePasswordValidationException(PasswordValidationException ex) {
+        ResponseDTO<Void> response = ResponseDTO.<Void>builder()
+                .status("error")
+                .code("PASSWORD_VALIDATION_FAILED")
+                .message(ex.getMessage())
+                .build();
+
+        return ResponseEntity.status(ex.getStatus()).body(response);
+    }
+
+    // 7. 검증 실패 오류  IllegalArgumentException
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ResponseDTO<Void>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        ResponseDTO<Void> response = ResponseDTO.<Void>builder()
+                .status("error")
+                .code("BAD_REQUEST")
+                .message(ex.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @Getter
     @Builder
     private static class ResponseDTO<T> {
@@ -110,4 +134,5 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         private T data;
     }
 }
+
 
