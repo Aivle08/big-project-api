@@ -1,5 +1,6 @@
 package com.aivle08.big_project_api.service;
 
+import com.aivle08.big_project_api.constants.ProcessingStatus;
 import com.aivle08.big_project_api.dto.response.FileUploadResponseDTO;
 import com.aivle08.big_project_api.model.Applicant;
 import com.aivle08.big_project_api.model.Recruitment;
@@ -70,6 +71,8 @@ public class S3Service {
         Applicant applicantWithFile = Applicant.builder()
                 .recruitment(savedApplicant.getRecruitment())
                 .id(savedApplicant.getId())
+                .processingStatus(ProcessingStatus.NOT_STARTED)
+                .scoreProcessingStatus(ProcessingStatus.NOT_STARTED)
                 .fileName(newFileName)
                 .build();
         applicantRepository.save(applicantWithFile);
