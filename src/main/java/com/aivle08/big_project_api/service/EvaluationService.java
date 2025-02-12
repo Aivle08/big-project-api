@@ -53,6 +53,7 @@ public class EvaluationService {
                     return EvaluationDetailResponseDTO.builder()
                             .score(evaluationScore.getScore())
                             .summary(summary)
+                            .title(evaluationScore.getEvaluation().getItem())
                             .build();
                 })
                 .toList();
