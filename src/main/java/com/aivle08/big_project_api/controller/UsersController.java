@@ -30,7 +30,6 @@ public class UsersController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
     public ResponseEntity<String> registerUser(@RequestBody RegisterRequestDTO registerRequestDTO) {
-        System.out.println("register start");
         usersService.registerUser(registerRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }
@@ -58,7 +57,7 @@ public class UsersController {
         Users user = usersService.getCurrentUser();
         return ResponseEntity.ok().body(user);
     }
-    
+
     @GetMapping("/check-username")
     @Operation(summary = "아이디 중복 확인")
     @ApiResponses({
