@@ -80,7 +80,7 @@ public class AiApiController {
     })
     public ResponseEntity<String> postScoreCall(@PathVariable(name = "recruitment-id") Long recruitmentId) {
         apiPipeService.scorePipe(recruitmentId);
-        return ResponseEntity.accepted().body("점수 계산이 시작되었습니다.");
+        return ResponseEntity.accepted().body("점수 계산 완료");
     }
 
     @PostMapping("/{recruitment-id}/score-async")
