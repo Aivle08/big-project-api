@@ -1,5 +1,6 @@
 package com.aivle08.big_project_api.service;
 
+import com.aivle08.big_project_api.constants.ProcessingStatus;
 import com.aivle08.big_project_api.dto.request.EvaluationRequestDTO;
 import com.aivle08.big_project_api.dto.request.RecruitmentRequestDTO;
 import com.aivle08.big_project_api.dto.response.RecruitmentResponseDTO;
@@ -44,6 +45,8 @@ public class RecruitmentService {
                 .title(recruitmentRequestDTO.getTitle())
                 .job(recruitmentRequestDTO.getJob())
                 .evaluationList(evaluations)
+                .processingStatus(ProcessingStatus.NOT_STARTED)
+                .scoreProcessingStatus(ProcessingStatus.NOT_STARTED)
                 .department(department)
                 .build();
 
