@@ -42,9 +42,9 @@ public class EvaluationService {
             throw new IllegalArgumentException("해당 지원자는 채용 공고에 포함되지 않습니다. applicantId: " + applicantId);
         }
 
-        String applicantName = applicantRepository.findById(applicantId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 지원자를 찾을 수 없습니다. ID: " + applicantId))
-                .getName();
+        Applicant applicant = applicantRepository.findById(applicantId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 지원자를 찾을 수 없습니다. ID: " + applicantId));
+
 
         List<EvaluationDetailResponseDTO> scoreDetails = evaluationScoreRepository.findByApplicantId(applicantId)
                 .stream()
@@ -61,7 +61,8 @@ public class EvaluationService {
         return EvaluationResponseDTO.builder()
                 .applicantId(applicantId)
                 .recruitmentTitle(recruitmentTitle)
-                .applicantName(applicantName)
+                .applicantName(applicant.getName())
+                .resumeSummary(applicant.getResumeSummary())
                 .scoreDetails(scoreDetails)
                 .build();
     }
@@ -92,6 +93,7 @@ public class EvaluationService {
                     .recruitmentTitle(recruitmentTitle)
                     .applicantName(applicant.getName())
                     .scoreDetails(scoreDetails)
+                    .resumeSummary(applicant.getResumeSummary())
                     .applicantId(applicant.getId())
                     .build();
 
@@ -129,6 +131,7 @@ public class EvaluationService {
                     .applicantName(applicant.getName())
                     .scoreDetails(scoreDetails)
                     .applicantId(applicant.getId())
+                    .resumeSummary(applicant.getResumeSummary())
                     .build());
         }
 
