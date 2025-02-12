@@ -148,7 +148,7 @@ public class ApiPipeService {
         List<Evaluation> evaluations = evaluationRepository.findByRecruitment_id(recruitmentId);
         List<EvaluationScore> savedEvaluationScoreList = new ArrayList<>();
 
-        if (applicants.get(0).getEvaluationScoreList() == null) {
+        if (applicants.get(0).getEvaluationScoreList().size() == 0) {
             for (Applicant applicant : applicants) {
                 for (Evaluation evaluation : evaluations) {
                     EvaluationDetail evaluationDetail = EvaluationDetail.builder()
