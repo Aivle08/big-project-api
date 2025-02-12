@@ -1,5 +1,6 @@
 package com.aivle08.big_project_api.service;
 
+import com.aivle08.big_project_api.constants.ProcessingStatus;
 import com.aivle08.big_project_api.dto.api.request.*;
 import com.aivle08.big_project_api.dto.api.response.ApiResponseDTO;
 import com.aivle08.big_project_api.dto.api.response.QuestionResponseDTO;
@@ -32,8 +33,9 @@ public class ApiPipeService {
     @Autowired
     @Lazy
     private ApiPipeService self;
+    private final RecruitmentRepository recruitmentRepository;
 
-    public ApiPipeService(ApplicantRepository applicantRepository, ApiService apiService, ApplicantProcessingService applicantProcessingService, EvaluationScoreRepository evaluationScoreRepository, EvaluationDetailRepository evaluationDetailRepository, ResumeRetrieverRepository resumeRetrieverRepository, EvaluationRepository evaluationRepository) {
+    public ApiPipeService(ApplicantRepository applicantRepository, ApiService apiService, ApplicantProcessingService applicantProcessingService, EvaluationScoreRepository evaluationScoreRepository, EvaluationDetailRepository evaluationDetailRepository, ResumeRetrieverRepository resumeRetrieverRepository, EvaluationRepository evaluationRepository, RecruitmentRepository recruitmentRepository) {
         this.applicantRepository = applicantRepository;
         this.apiService = apiService;
         this.applicantProcessingService = applicantProcessingService;
@@ -41,10 +43,15 @@ public class ApiPipeService {
         this.evaluationDetailRepository = evaluationDetailRepository;
         this.resumeRetrieverRepository = resumeRetrieverRepository;
         this.evaluationRepository = evaluationRepository;
+        this.recruitmentRepository = recruitmentRepository;
     }
 
     @Transactional
     public void resumePdfPipe(Long recruitmentId) {
+        Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElse(null);
+        recruitment.updateProcessingStatus(ProcessingStatus.IN_PROGRESS);
+        recruitmentRepository.save(recruitment);
+
         // 지원자 목록 조회
         List<Applicant> applicants = applicantRepository.findByRecruitmentId(recruitmentId);
 
@@ -144,9 +151,11 @@ public class ApiPipeService {
     public void scorePipe2(Long recruitmentId) {
         // 지원자 목록 조회
         List<Applicant> applicants = applicantRepository.findByRecruitmentId(recruitmentId);
-        Recruitment recruitment = applicants.get(0).getRecruitment();
         List<Evaluation> evaluations = evaluationRepository.findByRecruitment_id(recruitmentId);
         List<EvaluationScore> savedEvaluationScoreList = new ArrayList<>();
+        Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElse(null);
+        recruitment.updateProcessingStatus(ProcessingStatus.IN_PROGRESS);
+        recruitmentRepository.save(recruitment);
 
         if (applicants.get(0).getEvaluationScoreList().size() == 0) {
             for (Applicant applicant : applicants) {
