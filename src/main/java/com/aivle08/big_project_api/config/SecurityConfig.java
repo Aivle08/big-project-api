@@ -63,7 +63,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://picks-up.site:3000", "http://picks-up.site:80", "http://picks-up.site:433"));
+        config.setAllowedOrigins(List.of("https://picks-up.site:3000", "https://picks-up.site:80", "https://picks-up.site:433", "http://picks-up.site:3000", "http://picks-up.site:80", "http://picks-up.site:433"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         config.setAllowedHeaders(List.of("*"));
         config.addExposedHeader("Authorization");
