@@ -50,6 +50,7 @@ public class SecurityConfig {
                                         "/api/v1/users/check-username",
                                         "/api/v1/users/initiate-email",
                                         "/api/v1/users/verify-email"
+//                                        "**"
                                 ).permitAll()
                                 .anyRequest().authenticated()
                 )
@@ -62,7 +63,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://frontend:3000"));
+        config.setAllowedOrigins(List.of("http://picks-up.site:3000", "http://picks-up.site:80", "http://picks-up.site:433"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         config.setAllowedHeaders(List.of("*"));
         config.addExposedHeader("Authorization");
