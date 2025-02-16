@@ -62,7 +62,7 @@ public class Applicant {
         this.resumeSummary = dto.getElseSummary();
         this.contact = dto.getPhone();
         this.email = dto.getEmail();
-        this.resumeResult = true;
+        this.resumeResult = false;
         this.processingStatus = status;
     }
 }
