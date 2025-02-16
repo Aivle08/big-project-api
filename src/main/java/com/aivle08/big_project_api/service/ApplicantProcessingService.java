@@ -147,7 +147,7 @@ public class ApplicantProcessingService {
             // 3. EvaluationScore 업데이트 (새로운 점수를 적용)
             EvaluationScore updatedScore = EvaluationScore.builder()
                     .id(e.getId())
-                    .score(dto.getScore())
+                    .score(dto.getScore() != null ? dto.getScore() : 0)
                     .applicant(e.getApplicant())
                     .evaluation(e.getEvaluation())
                     .evaluationDetail(e.getEvaluationDetail())
