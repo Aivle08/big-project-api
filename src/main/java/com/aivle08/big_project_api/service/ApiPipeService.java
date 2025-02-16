@@ -81,6 +81,11 @@ public class ApiPipeService {
     @Async
     public CompletableFuture<Void> resumePdfPipeAsync(Long recruitmentId) {
         resumePdfPipe(recruitmentId);
+
+        Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElse(null);
+        recruitment.updateProcessingStatus(ProcessingStatus.COMPLETED);
+        recruitmentRepository.save(recruitment);
+
         return CompletableFuture.completedFuture(null);
     }
 
@@ -154,8 +159,6 @@ public class ApiPipeService {
         List<Evaluation> evaluations = evaluationRepository.findByRecruitment_id(recruitmentId);
         List<EvaluationScore> savedEvaluationScoreList = new ArrayList<>();
         Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElse(null);
-        recruitment.updateScoreProcessingStatus(ProcessingStatus.IN_PROGRESS);
-        recruitmentRepository.save(recruitment);
 
         if (applicants.get(0).getEvaluationScoreList().size() == 0) {
             for (Applicant applicant : applicants) {
@@ -181,9 +184,6 @@ public class ApiPipeService {
 //                .map( se -> applicantProcessingService.processApplicantScore(se, recruitment.getJob()))
                 .collect(Collectors.toList());
 
-        Recruitment recruitment2 = recruitmentRepository.findById(recruitmentId).orElse(null);
-        recruitment2.updateScoreProcessingStatus(ProcessingStatus.COMPLETED);
-        recruitmentRepository.save(recruitment);
 
         //모든 비동기 작업이 완료될 때까지 대기 (필요에 따라 timeout 등 추가 고려)
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
@@ -193,6 +193,11 @@ public class ApiPipeService {
     @Async
     public CompletableFuture<Void> scorePipeAsync2(Long recruitmentId) {
         self.scorePipe2(recruitmentId);
+
+        Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElse(null);
+        recruitment.updateScoreProcessingStatus(ProcessingStatus.COMPLETED);
+        recruitmentRepository.save(recruitment);
+
         return CompletableFuture.completedFuture(null);
     }
 

@@ -1,6 +1,9 @@
 package com.aivle08.big_project_api.controller;
 
+import com.aivle08.big_project_api.constants.ProcessingStatus;
 import com.aivle08.big_project_api.dto.response.QuestionListResponseDTO;
+import com.aivle08.big_project_api.model.Recruitment;
+import com.aivle08.big_project_api.repository.RecruitmentRepository;
 import com.aivle08.big_project_api.service.ApiPipeService;
 import com.aivle08.big_project_api.service.ApiService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,10 +24,12 @@ import java.util.List;
 public class AiApiController {
     private final ApiPipeService apiPipeService;
     private final ApiService apiService;
+    private final RecruitmentRepository recruitmentRepository;
 
-    public AiApiController(ApiPipeService apiPipeService, ApiService apiService) {
+    public AiApiController(ApiPipeService apiPipeService, ApiService apiService, RecruitmentRepository recruitmentRepository) {
         this.apiPipeService = apiPipeService;
         this.apiService = apiService;
+        this.recruitmentRepository = recruitmentRepository;
     }
 
     @PostMapping("/{recruitment-id}/resume-pdf")
@@ -51,6 +56,10 @@ public class AiApiController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
     public ResponseEntity<String> postResumePipeCallAsync(@PathVariable(name = "recruitment-id") Long recruitmentId) {
+        Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElse(null);
+        recruitment.updateProcessingStatus(ProcessingStatus.IN_PROGRESS);
+        recruitmentRepository.save(recruitment);
+
         apiPipeService.resumePdfPipeAsync(recruitmentId);
         return ResponseEntity.accepted().body("이력서 처리가 시작되었습니다.");
     }
@@ -93,6 +102,10 @@ public class AiApiController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
     public ResponseEntity<String> postScoreCallAsync(@PathVariable(name = "recruitment-id") Long recruitmentId) {
+        Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElse(null);
+        recruitment.updateScoreProcessingStatus(ProcessingStatus.IN_PROGRESS);
+        recruitmentRepository.save(recruitment);
+        
         apiPipeService.scorePipeAsync2(recruitmentId);
         return ResponseEntity.ok().body("점수 계산이 시작되었습니다.");
     }

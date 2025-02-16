@@ -16,5 +16,6 @@ public class ScoreRequestDTO {
     private String evalItem;
     @JsonProperty("eval_item_content")
     private String evalItemContent;
+    @JsonProperty("applicant_id")
     private Long applicantId;
 }
